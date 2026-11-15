@@ -581,10 +581,28 @@
   box-shadow: 6px 6px 0 var(--accent-yellow);
 }
 
+.download-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .download-card__kicker {
   color: var(--accent-yellow);
   font-size: 11px;
   font-weight: 700;
+}
+
+.download-card__counter {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--accent-cyan);
+  background: rgba(0, 240, 255, 0.08);
+  border: 1px solid var(--accent-cyan);
+  padding: 3px 8px;
+  letter-spacing: 0.06em;
 }
 
 .download-card__btn {

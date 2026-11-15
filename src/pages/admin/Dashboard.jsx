@@ -60,7 +60,7 @@ export default function Dashboard() {
                 <strong className="table__title">{r.title}</strong>
                 <span className="mono-label table__meta">
                   {r.maintainer ? `DEV: ${r.maintainer} · ` : ""}
-                  {r.version || "N/A"} · A{r.android_version || "?"} ·{" "}
+                  ⬇ {r.downloads || 0} DL · {r.version || "N/A"} · A{r.android_version || "?"} ·{" "}
                   {formatDate(r.updated_at)}
                 </span>
               </div>

@@ -54,6 +54,7 @@ export default function RomForm({ mode }) {
     { name: "", status: "works", notes: "" },
   ]);
   const [images, setImages] = useState([]);
+  const [downloads, setDownloads] = useState(0);
   const [romId, setRomId] = useState(null);
   const [loading, setLoading] = useState(isEdit);
   const [error, setError] = useState(null);
@@ -94,6 +95,7 @@ export default function RomForm({ mode }) {
             : [{ name: "", status: "works", notes: "" }]
         );
         setImages(rom.images || []);
+        setDownloads(Number(rom.downloads) || 0);
         setRomId(rom.id);
         setLoading(false);
       })
@@ -278,6 +280,16 @@ export default function RomForm({ mode }) {
               disabled={isEdit}
             />
           </Field>
+
+          {isEdit ? (
+            <Field label="TOTAL DOWNLOADS (RECORDED)" hint="AUTOMATICALLY TRACKED">
+              <input
+                className="input"
+                value={`⬇ ${downloads.toLocaleString()} CLICKS`}
+                disabled
+              />
+            </Field>
+          ) : null}
 
           <Field label="DEVELOPER / MAINTAINER" wide hint="SELECT FROM TEAM OR TYPE MANUALLY">
             <input

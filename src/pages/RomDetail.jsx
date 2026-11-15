@@ -11,13 +11,18 @@ import { parseSteps } from "../utils/text.js";
 export default function RomDetail() {
   const { slug } = useParams();
   const [state, setState] = useState({ loading: true, rom: null, error: null });
+  const [downloads, setDownloads] = useState(0);
   const [zoom, setZoom] = useState(null);
 
   useEffect(() => {
     let live = true;
     setState({ loading: true, rom: null, error: null });
     apiGet(`/api/roms/${slug}`)
-      .then((d) => live && setState({ loading: false, rom: d.rom, error: null }))
+      .then((d) => {
+        if (!live) return;
+        setState({ loading: false, rom: d.rom, error: null });
+        setDownloads(Number(d.rom?.downloads) || 0);
+      })
       .catch((e) => live && setState({ loading: false, rom: null, error: e }));
     return () => {
       live = false;
@@ -43,6 +48,36 @@ export default function RomDetail() {
   const rom = state.rom;
   const steps = parseSteps(rom.flash_guide);
 
+  const handleDownload = () => {
+    if (!rom?.slug) return;
+    const cacheKey = `xms_dl_${rom.slug}`;
+    let alreadyClicked = false;
+    try {
+      alreadyClicked = Boolean(localStorage.getItem(cacheKey));
+    } catch {}
+
+    if (!alreadyClicked) {
+      try {
+        localStorage.setItem(cacheKey, "1");
+      } catch {}
+
+      setDownloads((prev) => prev + 1);
+
+      fetch(`/api/roms/${rom.slug}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "download" }),
+      })
+        .then((r) => r.json())
+        .then((data) => {
+          if (typeof data?.downloads === "number") {
+            setDownloads(data.downloads);
+          }
+        })
+        .catch(() => {});
+    }
+  };
+
   return (
     <div className="page container">
       <nav className="crumbs">
@@ -57,21 +92,20 @@ export default function RomDetail() {
           <span className="detail__date">RELEASED: {formatDate(rom.created_at)}</span>
         </div>
         <h1 className="detail__title">{rom.title}</h1>
-        {(rom.version || rom.android_version || rom.source || rom.maintainer) && (
-          <div className="detail__chips">
-            {rom.maintainer ? (
-              <span className="chip chip--dev">DEV: {rom.maintainer}</span>
-            ) : null}
-            {rom.android_version ? (
-              <span className="chip chip--cyan">ANDROID {rom.android_version}</span>
-            ) : null}
-            {rom.version ? <span className="chip">{rom.version}</span> : null}
-            {rom.source ? (
-              <span className="chip chip--yellow">BASE: {rom.source}</span>
-            ) : null}
-            <span className="chip">DEVICE: POCO F5</span>
-          </div>
-        )}
+        <div className="detail__chips">
+          {rom.maintainer ? (
+            <span className="chip chip--dev">DEV: {rom.maintainer}</span>
+          ) : null}
+          <span className="chip chip--cyan">⬇ {downloads.toLocaleString()} DOWNLOADS</span>
+          {rom.android_version ? (
+            <span className="chip">ANDROID {rom.android_version}</span>
+          ) : null}
+          {rom.version ? <span className="chip">{rom.version}</span> : null}
+          {rom.source ? (
+            <span className="chip chip--yellow">BASE: {rom.source}</span>
+          ) : null}
+          <span className="chip">DEVICE: POCO F5</span>
+        </div>
       </header>
 
       {rom.images?.length ? (
@@ -188,13 +222,19 @@ export default function RomDetail() {
 
         <aside className="detail__aside">
           <div className="download-card">
-            <span className="mono-label download-card__kicker">MIRROR DOWNLOAD</span>
+            <div className="download-card__head">
+              <span className="mono-label download-card__kicker">MIRROR DOWNLOAD</span>
+              <span className="download-card__counter mono-label">
+                ⬇ {downloads.toLocaleString()} {downloads === 1 ? "DOWNLOAD" : "DOWNLOADS"}
+              </span>
+            </div>
             {rom.download_url ? (
               <a
                 className="btn btn--primary btn--block download-card__btn"
                 href={rom.download_url}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={handleDownload}
               >
                 DOWNLOAD ROM ZIP ↓
               </a>
@@ -209,6 +249,10 @@ export default function RomDetail() {
                   <dd>{rom.maintainer}</dd>
                 </div>
               ) : null}
+              <div>
+                <dt className="mono-label">DOWNLOADS</dt>
+                <dd>{downloads.toLocaleString()} CLICKS</dd>
+              </div>
               <div>
                 <dt className="mono-label">VERSION</dt>
                 <dd>{rom.version || "N/A"}</dd>

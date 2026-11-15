@@ -351,6 +351,15 @@
   border: 1px solid var(--accent-cyan);
 }
 
+.card__dl-pill {
+  color: var(--accent-yellow);
+  background: rgba(255, 230, 0, 0.08);
+  padding: 3px 8px;
+  border: 1px solid var(--accent-yellow);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
 .card__date {
   color: var(--muted);
 }

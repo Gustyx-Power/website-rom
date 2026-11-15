@@ -9,6 +9,9 @@ export default function RomCard({ rom, index = 0 }) {
         <span className="card__index mono-label">
           BUILD #{String(index + 1).padStart(2, "0")}
         </span>
+        <span className="card__dl-pill mono-label">
+          ⬇ {rom.downloads || 0}
+        </span>
         <span className="card__date mono-label">{formatDate(rom.created_at)}</span>
       </div>
 
