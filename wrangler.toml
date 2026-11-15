@@ -1,22 +1,30 @@
-# XMS Port — Cloudflare Pages (config as code)
-# Reponya connect ke Cloudflare Pages → binding di bawah otomatis dipakai saat build/deploy.
+# XMS Port — Cloudflare Worker + Static Assets
+# Deploy: npm run build && wrangler deploy   (atau otomatis via Git integration)
+#
+# /api/* dan /images/* → src/worker.js (API Pages Functions + serve R2)
+# sisanya              → file statis dari ./dist, SPA fallback ke index.html
 
 name = "xms-port"
+main = "src/worker.js"
 compatibility_date = "2025-09-01"
-pages_build_output_dir = "dist"
+
+[assets]
+directory = "./dist"
+not_found_handling = "single-page-application"
+run_worker_first = ["/api/*", "/images/*"]
 
 # ---- D1: database ROM, fitur, metadata gambar ----
 [[d1_databases]]
 binding = "DB"
 database_name = "xms-port-db"
-database_id = "00000000-0000-0000-0000-000000000000"  # GANTI: wrangler d1 create xms-port-db
+database_id = "7c998bf0-aa64-4337-9353-7c32cd3728a6"
 
 # ---- R2: penyimpanan file gambar (screenshot ROM) ----
 [[r2_buckets]]
 binding = "IMAGES"
-bucket_name = "xms-port-images"                        # GANTI jika nama bucket beda
+bucket_name = "xms-port-images"
 
 # ---- Secret (TIDAK disimpan di sini) ----
-# ADMIN_TOKEN di-set sebagai Pages secret:
-#   npx wrangler pages secret put ADMIN_TOKEN --project-name xms-port
+# ADMIN_TOKEN sebagai Worker secret:
+#   npx wrangler secret put ADMIN_TOKEN --name xms-port
 # Untuk local dev, copy .dev.vars.example → .dev.vars

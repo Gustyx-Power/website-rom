@@ -9,13 +9,14 @@
   },
   "scripts": {
     "dev": "vite",
-    "dev:cf": "wrangler pages dev -- npm run dev",
+    "dev:api": "npm run build && wrangler dev",
     "build": "vite build",
     "preview": "vite preview",
-    "preview:cf": "npm run build && wrangler pages dev dist",
-    "deploy": "npm run build && wrangler pages deploy dist",
+    "preview:cf": "npm run build && wrangler dev",
+    "deploy": "npm run build && wrangler deploy",
     "db:init": "wrangler d1 execute xms-port-db --local --file=schema.sql",
     "db:seed": "wrangler d1 execute xms-port-db --local --file=seed.sql",
+    "db:init:remote": "wrangler d1 execute xms-port-db --remote --file=schema.sql -y",
     "verify:api": "node scripts/verify-functions.mjs",
     "test:api": "node scripts/smoke-test.mjs"
   },
