@@ -158,23 +158,23 @@ export default function PocoHologram() {
             <circle cx="105" cy="165" r="6" fill="#ffffff" />
           </g>
 
-          {/* Tertiary Macro Camera (Right of top lens) */}
+          {/* Tertiary Macro Camera (Centered vertically between main lenses) */}
           <circle
             cx="148"
-            cy="118"
+            cy="135"
             r="10"
             fill="rgba(0, 0, 0, 0.85)"
             stroke="#ffffff"
             strokeWidth="1.8"
           />
-          <circle cx="148" cy="118" r="4.5" fill="#ffffff" />
+          <circle cx="148" cy="135" r="4.5" fill="#ffffff" />
 
-          {/* Dual LED Flash (Right of bottom lens) */}
+          {/* Dual LED Flash (Aligned with bottom lens center) */}
           <rect
             x="144"
-            y="142"
+            y="155"
             width="8"
-            height="22"
+            height="20"
             rx="4"
             fill="rgba(255, 255, 255, 0.12)"
             stroke="#ffffff"
