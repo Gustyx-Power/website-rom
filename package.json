@@ -16,7 +16,8 @@
     "deploy": "npm run build && wrangler pages deploy dist",
     "db:init": "wrangler d1 execute xms-port-db --local --file=schema.sql",
     "db:seed": "wrangler d1 execute xms-port-db --local --file=seed.sql",
-    "verify:api": "node scripts/verify-functions.mjs"
+    "verify:api": "node scripts/verify-functions.mjs",
+    "test:api": "node scripts/smoke-test.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
