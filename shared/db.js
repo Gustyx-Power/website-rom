@@ -44,7 +44,17 @@ export async function insertFeatures(db, romId, features) {
   }
 }
 
+export async function ensureColumns(db) {
+  try {
+    await db.prepare("ALTER TABLE roms ADD COLUMN maintainer TEXT NOT NULL DEFAULT ''").run();
+  } catch {}
+  try {
+    await db.prepare("ALTER TABLE roms ADD COLUMN credits TEXT NOT NULL DEFAULT ''").run();
+  } catch {}
+}
+
 export async function getRomBySlug(db, slug) {
+  await ensureColumns(db);
   const rom = await db
     .prepare("SELECT * FROM roms WHERE slug = ?")
     .bind(slug)

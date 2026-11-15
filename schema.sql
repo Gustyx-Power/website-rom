@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS roms (
   android_version TEXT NOT NULL DEFAULT '',
   kernel TEXT NOT NULL DEFAULT '',
   source TEXT NOT NULL DEFAULT '',
+  maintainer TEXT NOT NULL DEFAULT '',
+  credits TEXT NOT NULL DEFAULT '',
   description TEXT NOT NULL DEFAULT '',
   changelog TEXT NOT NULL DEFAULT '',
   flash_guide TEXT NOT NULL DEFAULT '',

@@ -6,10 +6,12 @@ import {
   insertFeatures,
   nowStamp,
   FEATURE_STATUSES,
+  ensureColumns,
 } from "../../../shared/db.js";
 
 // GET /api/roms — publik: daftar semua ROM (terbaru dulu).
 export async function onRequestGet({ env }) {
+  await ensureColumns(env.DB);
   const res = await env.DB.prepare(
     "SELECT * FROM roms ORDER BY datetime(created_at) DESC, id DESC"
   ).all();
@@ -20,6 +22,7 @@ export async function onRequestGet({ env }) {
 export async function onRequestPost({ request, env }) {
   const unauth = await requireAuth(request, env);
   if (unauth) return unauth;
+  await ensureColumns(env.DB);
 
   const body = await request.json().catch(() => null);
   const title = String(body?.title || "").trim();
@@ -41,8 +44,8 @@ export async function onRequestPost({ request, env }) {
 
   await env.DB.prepare(
     `INSERT INTO roms
-      (slug, title, version, android_version, kernel, source, description, changelog, flash_guide, download_url, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      (slug, title, version, android_version, kernel, source, maintainer, credits, description, changelog, flash_guide, download_url, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   )
     .bind(
       slug,
@@ -51,6 +54,8 @@ export async function onRequestPost({ request, env }) {
       String(body?.android_version || "").trim().slice(0, 20),
       String(body?.kernel || "").trim().slice(0, 120),
       String(body?.source || "").trim().slice(0, 120),
+      String(body?.maintainer || "").trim().slice(0, 120),
+      String(body?.credits || "").slice(0, 8000),
       String(body?.description || "").slice(0, 8000),
       String(body?.changelog || "").slice(0, 8000),
       String(body?.flash_guide || "").slice(0, 8000),

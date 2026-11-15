@@ -5,6 +5,7 @@ import {
   insertFeatures,
   nowStamp,
   FEATURE_STATUSES,
+  ensureColumns,
 } from "../../../shared/db.js";
 
 // GET /api/roms/:slug — publik: detail ROM + fitur + gambar.
@@ -18,6 +19,7 @@ export async function onRequestGet({ env, params }) {
 export async function onRequestPut({ request, env, params }) {
   const unauth = await requireAuth(request, env);
   if (unauth) return unauth;
+  await ensureColumns(env.DB);
 
   const rom = await env.DB
     .prepare("SELECT id FROM roms WHERE slug = ?")
@@ -42,7 +44,7 @@ export async function onRequestPut({ request, env, params }) {
   await env.DB.prepare(
     `UPDATE roms SET
       title = ?, version = ?, android_version = ?, kernel = ?, source = ?,
-      description = ?, changelog = ?, flash_guide = ?, download_url = ?, updated_at = ?
+      maintainer = ?, credits = ?, description = ?, changelog = ?, flash_guide = ?, download_url = ?, updated_at = ?
      WHERE id = ?`
   )
     .bind(
@@ -51,6 +53,8 @@ export async function onRequestPut({ request, env, params }) {
       String(body?.android_version || "").trim().slice(0, 20),
       String(body?.kernel || "").trim().slice(0, 120),
       String(body?.source || "").trim().slice(0, 120),
+      String(body?.maintainer || "").trim().slice(0, 120),
+      String(body?.credits || "").slice(0, 8000),
       String(body?.description || "").slice(0, 8000),
       String(body?.changelog || "").slice(0, 8000),
       String(body?.flash_guide || "").slice(0, 8000),
