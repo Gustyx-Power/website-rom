@@ -45,7 +45,7 @@ export default function RomForm({ mode }) {
   const [loading, setLoading] = useState(isEdit);
   const [error, setError] = useState(null);
   const [notice, setNotice] = useState(
-    justCreated ? "ROM CREATED — UPLOAD SCREENSHOTS DI BAWAH" : null
+    justCreated ? "ROM CREATED / UPLOAD SCREENSHOTS BELOW" : null
   );
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(0);
@@ -155,7 +155,7 @@ export default function RomForm({ mode }) {
     let ok = 0;
     for (const file of Array.from(files)) {
       if (!file.type.startsWith("image/")) {
-        setError(`SKIPPED ${file.name} — BUKAN FILE IMAGE`);
+        setError(`SKIPPED ${file.name} / NOT AN IMAGE FILE`);
         setUploading((n) => n - 1);
         continue;
       }
@@ -228,7 +228,7 @@ export default function RomForm({ mode }) {
             required
           />
         </Field>
-        <Field label={isEdit ? "SLUG (FIXED)" : "SLUG (OPSIONAL — AUTO DARI TITLE)"}>
+        <Field label={isEdit ? "SLUG (FIXED)" : "SLUG (OPTIONAL / AUTO FROM TITLE)"}>
           <input
             className="input"
             value={form.slug}
@@ -348,7 +348,7 @@ export default function RomForm({ mode }) {
             </div>
           ))}
         </div>
-        <button type="button" className="btn btn--sm" onClick={addFeature}>
+        <button type="button" className="btn btn--sm btn--cyan" onClick={addFeature}>
           + ADD FEATURE
         </button>
       </section>
@@ -378,18 +378,18 @@ export default function RomForm({ mode }) {
                 hidden
                 onChange={(e) => uploadFiles(e.target.files)}
               />
-              <span>{uploading ? `UPLOADING ${uploading}…` : "+ ADD IMAGES"}</span>
+              <span>{uploading ? `UPLOADING ${uploading}...` : "+ ADD IMAGES"}</span>
             </label>
           </div>
         </section>
       ) : null}
 
       <div className="form-actions">
-        <Link className="btn btn--sm" to="/admin/dashboard">
+        <Link className="btn btn--sm btn--outline" to="/admin/dashboard">
           CANCEL
         </Link>
-        <button className="btn" disabled={saving}>
-          {saving ? "SAVING…" : isEdit ? "SAVE CHANGES →" : "CREATE ROM →"}
+        <button className="btn btn--primary" disabled={saving}>
+          {saving ? "SAVING..." : isEdit ? "SAVE CHANGES →" : "CREATE ROM →"}
         </button>
       </div>
     </form>

@@ -27,7 +27,7 @@ export default function RomDetail() {
   if (state.loading) {
     return (
       <div className="page container">
-        <Loader />
+        <Loader label="LOADING BUILD DATA..." />
       </div>
     );
   }
@@ -35,7 +35,7 @@ export default function RomDetail() {
   if (!state.rom) {
     return (
       <div className="page container">
-        <ErrorBox>{state.error?.message || "FAILED TO LOAD ROM"}</ErrorBox>
+        <ErrorBox>{state.error?.message || "FAILED TO LOAD ROM DETAILS"}</ErrorBox>
       </div>
     );
   }
@@ -46,23 +46,27 @@ export default function RomDetail() {
   return (
     <div className="page container">
       <nav className="crumbs">
-        <Link to="/roms" className="mono-label">
+        <Link to="/roms" className="crumbs__link mono-label">
           ← ALL PORTS
         </Link>
       </nav>
 
       <header className="detail__head">
         <div className="detail__id mono-label">
-          #{rom.slug.toUpperCase()} — {formatDate(rom.created_at)}
+          <span className="detail__id-pill">BUILD #{rom.slug.toUpperCase()}</span>
+          <span className="detail__date">RELEASED: {formatDate(rom.created_at)}</span>
         </div>
         <h1 className="detail__title">{rom.title}</h1>
         {(rom.version || rom.android_version || rom.source) && (
           <div className="detail__chips">
-            {rom.version ? <span className="chip">{rom.version}</span> : null}
             {rom.android_version ? (
-              <span className="chip">ANDROID {rom.android_version}</span>
+              <span className="chip chip--cyan">ANDROID {rom.android_version}</span>
             ) : null}
-            {rom.source ? <span className="chip">SOURCE: {rom.source}</span> : null}
+            {rom.version ? <span className="chip">{rom.version}</span> : null}
+            {rom.source ? (
+              <span className="chip chip--yellow">BASE: {rom.source}</span>
+            ) : null}
+            <span className="chip">DEVICE: POCO F5</span>
           </div>
         )}
       </header>
@@ -75,13 +79,14 @@ export default function RomDetail() {
               type="button"
               className="gallery__cell"
               onClick={() => setZoom(`/images/${im.object_key}`)}
-              aria-label="Zoom image"
+              aria-label="Zoom image preview"
             >
               <img
                 src={`/images/${im.object_key}`}
                 alt={`${rom.title} screenshot`}
                 loading="lazy"
               />
+              <span className="gallery__overlay mono-label">ZOOM ↗</span>
             </button>
           ))}
         </section>
@@ -91,21 +96,23 @@ export default function RomDetail() {
         <div className="detail__main">
           {rom.description ? (
             <section className="block">
-              <h2 className="block__title">OVERVIEW</h2>
-              {rom.description
-                .split(/\r?\n/)
-                .filter((l) => l.trim())
-                .map((p, i) => (
-                  <p className="block__body" key={i}>
-                    {p}
-                  </p>
-                ))}
+              <h2 className="block__title">BUILD OVERVIEW</h2>
+              <div className="block__content">
+                {rom.description
+                  .split(/\r?\n/)
+                  .filter((l) => l.trim())
+                  .map((p, i) => (
+                    <p className="block__body" key={i}>
+                      {p}
+                    </p>
+                  ))}
+              </div>
             </section>
           ) : null}
 
           {rom.changelog ? (
             <section className="block">
-              <h2 className="block__title">CHANGELOG</h2>
+              <h2 className="block__title">CHANGELOG / RELEASE NOTES</h2>
               <ul className="changelog">
                 {parseSteps(rom.changelog).map((c, i) => (
                   <li key={i}>{c}</li>
@@ -113,81 +120,92 @@ export default function RomDetail() {
               </ul>
             </section>
           ) : null}
+
+          {steps.length ? (
+            <section className="block">
+              <h2 className="block__title">FLASHING INSTRUCTIONS (STEP BY STEP)</h2>
+              <ol className="steps">
+                {steps.map((s, i) => (
+                  <li key={i}>
+                    <span className="steps__num">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="steps__text">{s}</span>
+                  </li>
+                ))}
+              </ol>
+              <div className="steps__warn-box">
+                <span className="mono-label steps__warn">
+                  CAUTION: FLASHING CARRIES INHERENT RISKS. ALWAYS BACK UP COMPLETE DATA TO EXTERNAL STORAGE FIRST.
+                </span>
+              </div>
+            </section>
+          ) : null}
+
+          <section className="block">
+            <div className="block__head">
+              <div>
+                <h2 className="block__title">FEATURE STATUS DOCUMENTATION</h2>
+                <p className="mono-label block__subtitle">
+                  TRANSPARENT FEATURE READINESS MATRIX FOR THIS BUILD
+                </p>
+              </div>
+              <div className="legend">
+                <StatusBadge status="works" />
+                <StatusBadge status="partial" />
+                <StatusBadge status="broken" />
+              </div>
+            </div>
+            <FeatureTable features={rom.features} />
+          </section>
         </div>
 
         <aside className="detail__aside">
-          {rom.download_url ? (
-            <a
-              className="btn btn--block"
-              href={rom.download_url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              DOWNLOAD ROM ↓
-            </a>
-          ) : (
-            <div className="empty">NO MIRROR LINK YET</div>
-          )}
-          <dl className="info-list">
-            <div>
-              <dt className="mono-label">VERSION</dt>
-              <dd>{rom.version || "—"}</dd>
-            </div>
-            <div>
-              <dt className="mono-label">ANDROID</dt>
-              <dd>{rom.android_version || "—"}</dd>
-            </div>
-            <div>
-              <dt className="mono-label">KERNEL</dt>
-              <dd>{rom.kernel || "—"}</dd>
-            </div>
-            <div>
-              <dt className="mono-label">SOURCE</dt>
-              <dd>{rom.source || "—"}</dd>
-            </div>
-            <div>
-              <dt className="mono-label">UPDATED</dt>
-              <dd>{formatDate(rom.updated_at)}</dd>
-            </div>
-          </dl>
+          <div className="download-card">
+            <span className="mono-label download-card__kicker">MIRROR DOWNLOAD</span>
+            {rom.download_url ? (
+              <a
+                className="btn btn--primary btn--block download-card__btn"
+                href={rom.download_url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                DOWNLOAD ROM ZIP ↓
+              </a>
+            ) : (
+              <div className="empty">DOWNLOAD MIRROR NOT AVAILABLE YET</div>
+            )}
+
+            <dl className="info-list">
+              <div>
+                <dt className="mono-label">VERSION</dt>
+                <dd>{rom.version || "N/A"}</dd>
+              </div>
+              <div>
+                <dt className="mono-label">ANDROID</dt>
+                <dd>{rom.android_version ? `Android ${rom.android_version}` : "N/A"}</dd>
+              </div>
+              <div>
+                <dt className="mono-label">KERNEL</dt>
+                <dd>{rom.kernel || "N/A"}</dd>
+              </div>
+              <div>
+                <dt className="mono-label">SOURCE / BASE</dt>
+                <dd>{rom.source || "N/A"}</dd>
+              </div>
+              <div>
+                <dt className="mono-label">LAST UPDATED</dt>
+                <dd>{formatDate(rom.updated_at)}</dd>
+              </div>
+            </dl>
+          </div>
         </aside>
       </div>
-
-      {steps.length ? (
-        <section className="block">
-          <h2 className="block__title">FLASH INSTRUCTIONS</h2>
-          <ol className="steps">
-            {steps.map((s, i) => (
-              <li key={i}>
-                <span className="steps__num">{String(i + 1).padStart(2, "0")}</span>
-                <span>{s}</span>
-              </li>
-            ))}
-          </ol>
-          <p className="mono-label steps__warn">
-            ⚠ FLASH AT YOUR OWN RISK — BACK UP DATA FIRST
-          </p>
-        </section>
-      ) : null}
-
-      <section className="block">
-        <div className="block__head">
-          <h2 className="block__title">STATUS DOCUMENTATION</h2>
-          <div className="legend">
-            <StatusBadge status="works" />
-            <StatusBadge status="partial" />
-            <StatusBadge status="broken" />
-          </div>
-        </div>
-        <FeatureTable features={rom.features} />
-      </section>
 
       {zoom ? (
         <div
           className="lightbox"
           onClick={() => setZoom(null)}
           role="dialog"
-          aria-label="Image preview"
+          aria-label="Close image preview"
         >
           <img src={zoom} alt="Screenshot preview" />
         </div>

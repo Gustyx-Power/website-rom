@@ -3,7 +3,7 @@ import { apiGet } from "../api.js";
 import RomCard from "../components/RomCard.jsx";
 import Loader, { ErrorBox } from "../components/Loader.jsx";
 
-const SORTS = { newest: "NEWEST", oldest: "OLDEST", title: "A–Z" };
+const SORTS = { newest: "NEWEST", oldest: "OLDEST", title: "ALPHABETICAL (A-Z)" };
 
 export default function Roms() {
   const [data, setData] = useState(null);
@@ -44,23 +44,37 @@ export default function Roms() {
     return list;
   }, [roms, q, android, sort]);
 
+  const hasFilter = q.trim() !== "" || android !== "all" || sort !== "newest";
+  const resetFilters = () => {
+    setQ("");
+    setAndroid("all");
+    setSort("newest");
+  };
+
   return (
     <div className="page container">
       <header className="page__head">
-        <h1 className="page__title">ALL PORTS</h1>
-        <p className="mono-label page__count">
-          {data ? `${filtered.length}/${roms.length} ROMS` : ""}
-        </p>
+        <div>
+          <h1 className="page__title">ALL PORTS</h1>
+          <p className="mono-label page__subtitle">
+            COMPLETE CUSTOM ROM CATALOG FOR POCO F5
+          </p>
+        </div>
+        <div className="page__count-badge mono-label">
+          {data ? `${filtered.length} OF ${roms.length} BUILDS` : "LOADING..."}
+        </div>
       </header>
 
       <div className="filters">
-        <input
-          className="input"
-          placeholder="SEARCH TITLE / SOURCE…"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          aria-label="Search ROMs"
-        />
+        <div className="filters__search">
+          <input
+            className="input"
+            placeholder="SEARCH TITLE, BASE, VERSION..."
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            aria-label="Search ROMs"
+          />
+        </div>
         <select
           className="select"
           value={android}
@@ -86,14 +100,26 @@ export default function Roms() {
             </option>
           ))}
         </select>
+        {hasFilter && (
+          <button
+            type="button"
+            className="btn btn--sm btn--outline filters__reset"
+            onClick={resetFilters}
+            aria-label="Reset all filters"
+          >
+            RESET ✕
+          </button>
+        )}
       </div>
 
       {error ? (
-        <ErrorBox>API OFFLINE — JALANKAN `npm run dev:cf` UNTUK FULL STACK</ErrorBox>
+        <ErrorBox>API OFFLINE: RUN `npm run dev:cf` FOR FULL STACK</ErrorBox>
       ) : null}
-      {!error && !data ? <Loader /> : null}
+      {!error && !data ? <Loader label="LOADING PORT CATALOG..." /> : null}
       {data && filtered.length === 0 ? (
-        <div className="empty">NO ROMS MATCH YOUR FILTER</div>
+        <div className="empty">
+          NO PORTS MATCH YOUR SEARCH OR FILTER CRITERIA
+        </div>
       ) : null}
 
       <div className="grid grid--2">

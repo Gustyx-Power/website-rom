@@ -22,7 +22,7 @@ export default function Dashboard() {
   }, []);
 
   async function remove(rom) {
-    if (!window.confirm(`Delete "${rom.title}" permanently?`)) return;
+    if (!window.confirm(`Delete build "${rom.title}" permanently?`)) return;
     setDeleting(rom.slug);
     try {
       await apiSend("DELETE", `/api/roms/${rom.slug}`);
@@ -37,16 +37,19 @@ export default function Dashboard() {
   return (
     <div>
       <header className="page__head">
-        <h1 className="page__title">ROMS</h1>
-        <Link to="/admin/roms/new" className="btn btn--sm">
+        <div>
+          <h1 className="page__title">MANAGE ROMS</h1>
+          <p className="mono-label page__subtitle">BUILD DISTRIBUTION CONTROL ROOM</p>
+        </div>
+        <Link to="/admin/roms/new" className="btn btn--primary btn--sm">
           + NEW ROM
         </Link>
       </header>
 
       {error ? <p className="error-box mono-label">{error}</p> : null}
-      {!roms && !error ? <Loader /> : null}
+      {!roms && !error ? <Loader label="LOADING BUILDS..." /> : null}
       {roms?.length === 0 ? (
-        <div className="empty">NO ROMS YET — CREATE YOUR FIRST PORT</div>
+        <div className="empty">NO BUILDS YET / CREATE YOUR FIRST PORT</div>
       ) : null}
 
       {roms?.length ? (
@@ -56,7 +59,7 @@ export default function Dashboard() {
               <div className="table__main">
                 <strong className="table__title">{r.title}</strong>
                 <span className="mono-label table__meta">
-                  {r.version || "—"} · A{r.android_version || "?"} ·{" "}
+                  {r.version || "N/A"} · A{r.android_version || "?"} ·{" "}
                   {formatDate(r.updated_at)}
                 </span>
               </div>
@@ -65,7 +68,7 @@ export default function Dashboard() {
                   VIEW ↗
                 </Link>
                 <Link
-                  className="mono-label table__link"
+                  className="mono-label table__link table__link--edit"
                   to={`/admin/roms/${r.slug}/edit`}
                 >
                   EDIT
@@ -76,7 +79,7 @@ export default function Dashboard() {
                   disabled={deleting === r.slug}
                   onClick={() => remove(r)}
                 >
-                  {deleting === r.slug ? "…" : "DELETE"}
+                  {deleting === r.slug ? "DELETING..." : "DELETE"}
                 </button>
               </div>
             </div>

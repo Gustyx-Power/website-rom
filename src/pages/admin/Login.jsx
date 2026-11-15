@@ -15,7 +15,7 @@ export default function Login({ onAuth }) {
       onAuth?.();
     } catch (e2) {
       setError(
-        e2.status === 401 ? "WRONG PASSWORD — TRY AGAIN" : e2.message.toUpperCase()
+        e2.status === 401 ? "WRONG PASSWORD / PLEASE TRY AGAIN" : e2.message.toUpperCase()
       );
       setBusy(false);
     }
@@ -38,8 +38,8 @@ export default function Login({ onAuth }) {
           />
         </label>
         {error ? <p className="error-box mono-label">{error}</p> : null}
-        <button className="btn" disabled={busy}>
-          {busy ? "CHECKING…" : "UNLOCK →"}
+        <button className="btn btn--primary" disabled={busy}>
+          {busy ? "CHECKING..." : "UNLOCK →"}
         </button>
       </form>
     </div>
