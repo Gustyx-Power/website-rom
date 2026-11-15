@@ -34,7 +34,7 @@ export default function Home() {
           </h1>
 
           <p className="hero__subtitle">
-            Curated custom ROMs and source builds engineered specifically for <strong>POCO F5 (Marble)</strong>.
+            Curated custom ROMs and source builds by the <strong>Xtra Manager Software Community</strong> engineered specifically for <strong>POCO F5 (Marble)</strong>.
             Delivered with verified flash instructions and transparent per-feature status
             documentation before you flash.
           </p>
@@ -73,6 +73,7 @@ export default function Home() {
         items={[
           "POCO F5",
           "MARBLE",
+          "BY XTRA MANAGER SOFTWARE COMMUNITY",
           "CUSTOM ROMS",
           "SERVER BUILDS & PORTS",
           "FLASH SAFE / ALWAYS BACK UP FIRST",
@@ -127,7 +128,7 @@ export default function Home() {
               </div>
               <div>
                 <dt className="mono-label">MAINTAINER</dt>
-                <dd>XTRA MANAGER SOFTWARE</dd>
+                <dd>XTRA MANAGER SOFTWARE COMMUNITY</dd>
               </div>
               <div>
                 <dt className="mono-label">DISTRIBUTION</dt>

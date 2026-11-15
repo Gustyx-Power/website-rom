@@ -31,12 +31,23 @@
 }
 
 .admin__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   border: 2px solid var(--fg);
-  padding: 8px 14px;
+  padding: 6px 14px;
   font-weight: 800;
   background: var(--surface-card);
   box-shadow: 2px 2px 0 var(--accent-yellow);
   transition: transform 0.12s ease, background-color 0.12s ease, color 0.12s ease;
+}
+
+.admin__brand-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  border: 1px solid var(--fg);
+  flex: none;
 }
 
 .admin__brand:hover {

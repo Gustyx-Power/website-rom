@@ -9,11 +9,22 @@ export default function Navbar() {
     <header className="nav">
       <div className="nav__inner">
         <Link to="/" className="nav__brand" onClick={close} aria-label="XMS ROM Home">
-          <span className="nav__mark">XMS</span>
-          <span className="nav__wordmark">
-            XTRA MANAGER
-            <br />
-            SOFTWARE ROM
+          <img
+            src="/xms-logo.png"
+            alt="XMS Logo"
+            className="nav__mark-img"
+            width="44"
+            height="44"
+          />
+          <span className="nav__brand-info">
+            <span className="nav__wordmark">
+              XTRA MANAGER
+              <br />
+              SOFTWARE ROM
+            </span>
+            <span className="nav__community mono-label">
+              BY XTRA MANAGER SOFTWARE COMMUNITY
+            </span>
           </span>
         </Link>
 

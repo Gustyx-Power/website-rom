@@ -47,7 +47,14 @@ export default function AdminLayout() {
       <header className="admin__bar">
         <div className="admin__bar-inner">
           <Link to="/admin/dashboard" className="admin__brand mono-label">
-            XMS // CONTROL ROOM
+            <img
+              src="/xms-logo.png"
+              alt="XMS"
+              className="admin__brand-logo"
+              width="24"
+              height="24"
+            />
+            <span>XMS // CONTROL ROOM</span>
           </Link>
           <nav className="admin__nav">
             <NavLink to="/admin/dashboard">DASHBOARD</NavLink>
