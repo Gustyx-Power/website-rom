@@ -2,7 +2,7 @@ const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "
 
 // Format tanggal SQLite (UTC) → "05 JAN 2026"
 export function formatDate(value) {
-  if (!value) return "—";
+  if (!value) return "N/A";
   const iso = String(value).includes("T") ? value : `${value.replace(" ", "T")}Z`;
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return String(value);

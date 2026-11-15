@@ -11,7 +11,7 @@ export default function FeatureTable({ features }) {
       {features.map((f) => (
         <div className="feature-row" key={f.id}>
           <span className="feature-row__name">{f.name}</span>
-          <span className="feature-row__notes">{f.notes || "—"}</span>
+          <span className="feature-row__notes">{f.notes || "N/A"}</span>
           <StatusBadge status={f.status} />
         </div>
       ))}

@@ -12,8 +12,8 @@ export default function Footer() {
             <Link to="/admin">ADMIN</Link>
           </nav>
           <p className="footer__note mono-label">
-            © {new Date().getFullYear()} XTRA MANAGER SOFTWARE — UNOFFICIAL POCO
-            F5 PORTS — NOT AFFILIATED WITH XIAOMI / POCO
+            © {new Date().getFullYear()} XTRA MANAGER SOFTWARE / UNOFFICIAL POCO
+            F5 PORTS / NOT AFFILIATED WITH XIAOMI OR POCO
           </p>
         </div>
       </div>

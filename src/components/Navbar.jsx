@@ -8,7 +8,7 @@ export default function Navbar() {
   return (
     <header className="nav">
       <div className="nav__inner">
-        <Link to="/" className="nav__brand" onClick={close}>
+        <Link to="/" className="nav__brand" onClick={close} aria-label="XMS Port Home">
           <span className="nav__mark">XMS</span>
           <span className="nav__wordmark">
             XTRA MANAGER
@@ -16,27 +16,42 @@ export default function Navbar() {
             SOFTWARE PORT
           </span>
         </Link>
+
         <button
           type="button"
           className={`nav__burger${open ? " is-open" : ""}`}
           onClick={() => setOpen((o) => !o)}
-          aria-label="Toggle menu"
+          aria-label={open ? "Close menu" : "Open navigation menu"}
           aria-expanded={open}
         >
           <span />
           <span />
           <span />
         </button>
+
+        {open && <div className="nav__backdrop" onClick={close} aria-hidden="true" />}
+
         <nav className={`nav__links${open ? " is-open" : ""}`}>
-          <NavLink to="/" end onClick={close}>
+          <NavLink
+            to="/"
+            end
+            onClick={close}
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
             HOME
           </NavLink>
-          <NavLink to="/roms" onClick={close}>
-            ROMS
+          <NavLink
+            to="/roms"
+            onClick={close}
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            ALL ROMS
           </NavLink>
           <div className="nav__device">
-            <span className="mono-label">DEVICE</span>
-            <strong>POCO F5</strong>
+            <span className="mono-label">TARGET DEVICE</span>
+            <strong className="nav__device-name">
+              <span className="nav__device-dot" /> POCO F5 (MARBLE)
+            </strong>
           </div>
         </nav>
       </div>
