@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Xtra Manager Software Port — custom ROM distribution site for POCO F5. React + Cloudflare Pages Functions + D1 + R2.",
   "engines": {
-    "node": ">=18"
+    "node": ">=22.12.0"
   },
   "scripts": {
     "dev": "vite",
