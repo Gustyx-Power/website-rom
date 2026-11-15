@@ -55,7 +55,7 @@ export default function Roms() {
     <div className="page container">
       <header className="page__head">
         <div>
-          <h1 className="page__title">ALL PORTS</h1>
+          <h1 className="page__title">ALL ROMS</h1>
           <p className="mono-label page__subtitle">
             COMPLETE CUSTOM ROM CATALOG FOR POCO F5
           </p>
@@ -115,10 +115,10 @@ export default function Roms() {
       {error ? (
         <ErrorBox>API OFFLINE: RUN `npm run dev:cf` FOR FULL STACK</ErrorBox>
       ) : null}
-      {!error && !data ? <Loader label="LOADING PORT CATALOG..." /> : null}
+      {!error && !data ? <Loader label="LOADING ROM CATALOG..." /> : null}
       {data && filtered.length === 0 ? (
         <div className="empty">
-          NO PORTS MATCH YOUR SEARCH OR FILTER CRITERIA
+          NO ROMS MATCH YOUR SEARCH OR FILTER CRITERIA
         </div>
       ) : null}
 

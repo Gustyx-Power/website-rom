@@ -8,12 +8,12 @@ export default function Navbar() {
   return (
     <header className="nav">
       <div className="nav__inner">
-        <Link to="/" className="nav__brand" onClick={close} aria-label="XMS Port Home">
+        <Link to="/" className="nav__brand" onClick={close} aria-label="XMS ROM Home">
           <span className="nav__mark">XMS</span>
           <span className="nav__wordmark">
             XTRA MANAGER
             <br />
-            SOFTWARE PORT
+            SOFTWARE ROM
           </span>
         </Link>
 

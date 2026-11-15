@@ -29,19 +29,19 @@ export default function Home() {
           <h1 className="hero__title">
             <span className="hero__title-row">XTRA MANAGER</span>
             <span className="hero__title-row">
-              <span className="is-outline">SOFTWARE</span> PORT
+              <span className="is-outline">SOFTWARE</span> ROM
             </span>
           </h1>
 
           <p className="hero__subtitle">
-            Curated custom ROM ports engineered specifically for <strong>POCO F5 (Marble)</strong>.
+            Curated custom ROMs and source builds engineered specifically for <strong>POCO F5 (Marble)</strong>.
             Delivered with verified flash instructions and transparent per-feature status
             documentation before you flash.
           </p>
 
           <div className="hero__actions">
             <Link to="/roms" className="btn btn--primary">
-              EXPLORE ALL PORTS ↓
+              EXPLORE ALL ROMS ↓
             </Link>
             <a href="#about" className="btn btn--outline">
               ABOUT PROJECT →
@@ -73,28 +73,29 @@ export default function Home() {
         items={[
           "POCO F5",
           "MARBLE",
-          "CUSTOM ROM PORTS",
+          "CUSTOM ROMS",
+          "SERVER BUILDS & PORTS",
           "FLASH SAFE / ALWAYS BACK UP FIRST",
           "TESTED BUILD STATUS DOCUMENTATION",
-          `XMS PORT ${new Date().getFullYear()}`,
+          `XMS ROM ${new Date().getFullYear()}`,
         ]}
       />
 
       <section className="section container" id="latest-roms">
         <div className="section__head">
           <div>
-            <h2 className="section__title">LATEST PORTS</h2>
+            <h2 className="section__title">LATEST ROMS</h2>
             <p className="mono-label section__subtitle">LATEST RELEASES FOR POCO F5</p>
           </div>
           <Link to="/roms" className="section__link mono-label">
-            VIEW ALL PORTS →
+            VIEW ALL ROMS →
           </Link>
         </div>
 
         {error ? (
           <ErrorBox>API OFFLINE: RUN `npm run dev:cf` FOR FULL STACK</ErrorBox>
         ) : null}
-        {!error && !data ? <Loader label="LOADING PORT CATALOG..." /> : null}
+        {!error && !data ? <Loader label="LOADING ROM CATALOG..." /> : null}
         {data && roms.length === 0 ? (
           <div className="empty">NO ROMS PUBLISHED YET / CHECK BACK SOON</div>
         ) : null}
@@ -110,12 +111,12 @@ export default function Home() {
         <div className="about">
           <div className="about__head">
             <span className="mono-label about__tag">ABOUT PROJECT</span>
-            <h2 className="section__title">ABOUT XMS PORT</h2>
+            <h2 className="section__title">ABOUT XMS ROM</h2>
           </div>
           <div className="about__cols">
             <p className="about__text">
-              <strong>Xtra Manager Software Port</strong> is the dedicated distribution hub for
-              custom ROM ports built and maintained specifically for the <strong>POCO F5 (Marble)</strong>.
+              <strong>Xtra Manager Software ROM</strong> is the dedicated distribution hub for
+              custom ROMs, server builds, and ports engineered specifically for the <strong>POCO F5 (Marble)</strong>.
               Every release is accompanied by clean flashing guides and honest status documentation
               for every hardware feature, so you know exactly what works before you flash.
             </p>

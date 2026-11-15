@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer__inner">
-        <p className="footer__big">XMS PORT</p>
+        <p className="footer__big">XMS ROM</p>
         <div className="footer__row">
           <nav className="footer__links">
             <Link to="/">HOME</Link>
@@ -13,7 +13,7 @@ export default function Footer() {
           </nav>
           <p className="footer__note mono-label">
             © {new Date().getFullYear()} XTRA MANAGER SOFTWARE / UNOFFICIAL POCO
-            F5 PORTS / NOT AFFILIATED WITH XIAOMI OR POCO
+            F5 BUILDS / NOT AFFILIATED WITH XIAOMI OR POCO
           </p>
         </div>
       </div>
