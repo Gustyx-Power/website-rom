@@ -285,7 +285,7 @@ export default function RomForm({ mode }) {
             <Field label="TOTAL DOWNLOADS (RECORDED)" hint="AUTOMATICALLY TRACKED">
               <input
                 className="input"
-                value={`⬇ ${downloads.toLocaleString()} CLICKS`}
+                value={`⬇ ${downloads.toLocaleString()} User Download`}
                 disabled
               />
             </Field>

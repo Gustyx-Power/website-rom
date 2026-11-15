@@ -251,7 +251,7 @@ export default function RomDetail() {
               ) : null}
               <div>
                 <dt className="mono-label">DOWNLOADS</dt>
-                <dd>{downloads.toLocaleString()} CLICKS</dd>
+                <dd>{downloads.toLocaleString()} User Download</dd>
               </div>
               <div>
                 <dt className="mono-label">VERSION</dt>
