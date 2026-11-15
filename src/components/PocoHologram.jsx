@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 
 export default function PocoHologram() {
-  const [rotate, setRotate] = useState({ x: 5, y: -8 });
+  const [rotate, setRotate] = useState({ x: 4, y: -7 });
   const wrapRef = useRef(null);
 
   function handleMouseMove(e) {
@@ -17,7 +17,7 @@ export default function PocoHologram() {
   }
 
   function handleMouseLeave() {
-    setRotate({ x: 4, y: -6 });
+    setRotate({ x: 4, y: -7 });
   }
 
   return (
@@ -40,25 +40,6 @@ export default function PocoHologram() {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <defs>
-            {/* Glowing Scan Beam */}
-            <linearGradient id="cadScanBeam" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="rgba(0, 240, 255, 0)" />
-              <stop offset="50%" stopColor="rgba(0, 240, 255, 0.45)" />
-              <stop offset="100%" stopColor="rgba(255, 230, 0, 0.75)" />
-            </linearGradient>
-
-            {/* Subtle glow filter */}
-            <filter id="cadGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="2.5" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-
-          {/* ================= PHONE CHASSIS ================= */}
           {/* Hard Shadow Silhouette */}
           <rect
             x="68"
@@ -72,7 +53,7 @@ export default function PocoHologram() {
             strokeWidth="10"
           />
 
-          {/* Outer Phone Border (POCO F5 Silhouette) */}
+          {/* Outer Phone Border (POCO F5 Clean White Silhouette) */}
           <rect
             x="65"
             y="45"
@@ -80,10 +61,9 @@ export default function PocoHologram() {
             height="410"
             rx="26"
             ry="26"
-            fill="rgba(10, 12, 16, 0.92)"
-            stroke="var(--accent-cyan)"
+            fill="#0a0c10"
+            stroke="#ffffff"
             strokeWidth="2.5"
-            filter="url(#cadGlow)"
           />
 
           {/* Inner Technical CAD Chamfer Frame */}
@@ -95,7 +75,7 @@ export default function PocoHologram() {
             rx="21"
             ry="21"
             fill="none"
-            stroke="rgba(0, 240, 255, 0.35)"
+            stroke="rgba(255, 255, 255, 0.3)"
             strokeWidth="1"
             strokeDasharray="4 3"
           />
@@ -106,7 +86,7 @@ export default function PocoHologram() {
             y1="130"
             x2="275"
             y2="175"
-            stroke="var(--accent-yellow)"
+            stroke="#ffffff"
             strokeWidth="3.5"
             strokeLinecap="round"
           />
@@ -115,16 +95,16 @@ export default function PocoHologram() {
             y1="190"
             x2="275"
             y2="225"
-            stroke="var(--accent-cyan)"
+            stroke="#ffffff"
             strokeWidth="3.5"
             strokeLinecap="round"
           />
 
           {/* Antenna Bands on side frame */}
-          <line x1="65" y1="95" x2="69" y2="95" stroke="var(--accent-yellow)" strokeWidth="2" />
-          <line x1="271" y1="95" x2="275" y2="95" stroke="var(--accent-yellow)" strokeWidth="2" />
-          <line x1="65" y1="405" x2="69" y2="405" stroke="var(--accent-yellow)" strokeWidth="2" />
-          <line x1="271" y1="405" x2="275" y2="405" stroke="var(--accent-yellow)" strokeWidth="2" />
+          <line x1="65" y1="95" x2="69" y2="95" stroke="rgba(255, 255, 255, 0.7)" strokeWidth="2" />
+          <line x1="271" y1="95" x2="275" y2="95" stroke="rgba(255, 255, 255, 0.7)" strokeWidth="2" />
+          <line x1="65" y1="405" x2="69" y2="405" stroke="rgba(255, 255, 255, 0.7)" strokeWidth="2" />
+          <line x1="271" y1="405" x2="275" y2="405" stroke="rgba(255, 255, 255, 0.7)" strokeWidth="2" />
 
           {/* ================= REAR CAMERA SYSTEM (POCO F5) ================= */}
           {/* Main Camera 1 (Top Left) */}
@@ -133,8 +113,8 @@ export default function PocoHologram() {
               cx="105"
               cy="105"
               r="26"
-              fill="rgba(0, 0, 0, 0.8)"
-              stroke="var(--accent-cyan)"
+              fill="rgba(0, 0, 0, 0.85)"
+              stroke="#ffffff"
               strokeWidth="2.5"
             />
             <circle
@@ -142,15 +122,15 @@ export default function PocoHologram() {
               cy="105"
               r="20"
               fill="none"
-              stroke="var(--accent-yellow)"
+              stroke="rgba(255, 255, 255, 0.5)"
               strokeWidth="1.2"
             />
-            <circle cx="105" cy="105" r="13" fill="#03080d" stroke="var(--accent-cyan)" strokeWidth="1" />
-            <circle cx="105" cy="105" r="6" fill="var(--accent-cyan)" />
+            <circle cx="105" cy="105" r="13" fill="#03080d" stroke="#ffffff" strokeWidth="1" />
+            <circle cx="105" cy="105" r="6" fill="#ffffff" />
             {/* Optical reflection arc */}
             <path
               d="M 96 98 A 12 12 0 0 1 114 98"
-              stroke="rgba(255, 255, 255, 0.85)"
+              stroke="rgba(255, 255, 255, 0.9)"
               strokeWidth="1.5"
               fill="none"
             />
@@ -162,8 +142,8 @@ export default function PocoHologram() {
               cx="105"
               cy="165"
               r="26"
-              fill="rgba(0, 0, 0, 0.8)"
-              stroke="var(--accent-cyan)"
+              fill="rgba(0, 0, 0, 0.85)"
+              stroke="#ffffff"
               strokeWidth="2.5"
             />
             <circle
@@ -171,11 +151,11 @@ export default function PocoHologram() {
               cy="165"
               r="20"
               fill="none"
-              stroke="rgba(0, 240, 255, 0.55)"
+              stroke="rgba(255, 255, 255, 0.5)"
               strokeWidth="1.2"
             />
-            <circle cx="105" cy="165" r="13" fill="#03080d" stroke="var(--accent-cyan)" strokeWidth="1" />
-            <circle cx="105" cy="165" r="6" fill="var(--accent-cyan)" />
+            <circle cx="105" cy="165" r="13" fill="#03080d" stroke="#ffffff" strokeWidth="1" />
+            <circle cx="105" cy="165" r="6" fill="#ffffff" />
           </g>
 
           {/* Tertiary Macro Camera (Right of top lens) */}
@@ -183,11 +163,11 @@ export default function PocoHologram() {
             cx="148"
             cy="118"
             r="10"
-            fill="rgba(0, 0, 0, 0.8)"
-            stroke="var(--accent-cyan)"
+            fill="rgba(0, 0, 0, 0.85)"
+            stroke="#ffffff"
             strokeWidth="1.8"
           />
-          <circle cx="148" cy="118" r="4.5" fill="var(--accent-cyan)" />
+          <circle cx="148" cy="118" r="4.5" fill="#ffffff" />
 
           {/* Dual LED Flash (Right of bottom lens) */}
           <rect
@@ -196,19 +176,9 @@ export default function PocoHologram() {
             width="8"
             height="22"
             rx="4"
-            fill="rgba(255, 230, 0, 0.6)"
-            stroke="var(--accent-yellow)"
+            fill="rgba(255, 255, 255, 0.12)"
+            stroke="#ffffff"
             strokeWidth="1.2"
-          />
-
-          {/* ================= SCANLINE BEAM ANIMATION ================= */}
-          <rect
-            className="cad-scan-beam"
-            x="66"
-            y="46"
-            width="208"
-            height="18"
-            fill="url(#cadScanBeam)"
           />
         </svg>
       </div>

@@ -122,18 +122,7 @@
   height: 100%;
   max-height: 470px;
   overflow: visible;
-  filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.18)) drop-shadow(8px 12px 0 rgba(0, 0, 0, 0.8));
-}
-
-.cad-scan-beam {
-  animation: cadScanBeamAnim 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-@keyframes cadScanBeamAnim {
-  0% { transform: translateY(0); opacity: 0; }
-  12% { opacity: 0.85; }
-  88% { opacity: 0.85; }
-  100% { transform: translateY(390px); opacity: 0; }
+  filter: drop-shadow(10px 14px 0 rgba(0, 0, 0, 0.95));
 }
 
 @media (max-width: 1024px) {
