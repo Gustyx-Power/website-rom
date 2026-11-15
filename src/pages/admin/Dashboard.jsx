@@ -49,7 +49,7 @@ export default function Dashboard() {
       {error ? <p className="error-box mono-label">{error}</p> : null}
       {!roms && !error ? <Loader label="LOADING BUILDS..." /> : null}
       {roms?.length === 0 ? (
-        <div className="empty">NO BUILDS YET / CREATE YOUR FIRST PORT</div>
+        <div className="empty">NO BUILDS YET / CREATE YOUR FIRST ROM</div>
       ) : null}
 
       {roms?.length ? (
@@ -59,6 +59,7 @@ export default function Dashboard() {
               <div className="table__main">
                 <strong className="table__title">{r.title}</strong>
                 <span className="mono-label table__meta">
+                  {r.maintainer ? `DEV: ${r.maintainer} · ` : ""}
                   {r.version || "N/A"} · A{r.android_version || "?"} ·{" "}
                   {formatDate(r.updated_at)}
                 </span>

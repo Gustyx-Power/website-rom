@@ -144,6 +144,153 @@
   gap: 32px;
 }
 
+/* Spacious Form Layout for Teams */
+.form--spacious {
+  max-width: 980px;
+  margin-inline: auto;
+  gap: 36px;
+}
+
+.form__card {
+  display: grid;
+  gap: 24px;
+  background: var(--surface-card);
+  border: var(--bw) solid var(--fg);
+  padding: 32px;
+  box-shadow: 5px 5px 0 var(--line-strong);
+  transition: box-shadow 0.15s ease;
+}
+
+.form__card:focus-within {
+  box-shadow: 6px 6px 0 var(--accent-yellow);
+}
+
+.form__card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  border-bottom: var(--bw) solid var(--line-strong);
+  padding-bottom: 16px;
+}
+
+.form__card-title {
+  font-size: clamp(17px, 2vw, 20px);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+  text-transform: uppercase;
+}
+
+.form__card-subtitle,
+.form__card-desc {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+
+.form__stack {
+  display: grid;
+  gap: 24px;
+}
+
+.field__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.field__hint {
+  color: var(--accent-cyan);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+}
+
+/* Team Developer Picker */
+.dev-picker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+  padding: 12px 14px;
+  background: var(--surface-elevated);
+  border: var(--bw-thin) solid var(--line-strong);
+}
+
+.dev-picker__label {
+  color: var(--muted);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  flex: none;
+}
+
+.dev-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.dev-pill {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border: 1.5px solid var(--fg);
+  background: var(--surface-card);
+  color: var(--fg);
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--fg);
+  transition: transform 0.1s ease, background-color 0.12s ease, color 0.12s ease, box-shadow 0.1s ease;
+}
+
+.dev-pill:hover {
+  transform: translate(-1px, -1px);
+  background: var(--accent-cyan);
+  color: var(--accent-cyan-fg);
+  border-color: #000;
+  box-shadow: 3px 3px 0 #ffffff;
+}
+
+.dev-pill.is-active {
+  background: var(--accent-cyan);
+  color: var(--accent-cyan-fg);
+  border-color: #000;
+  box-shadow: 2px 2px 0 var(--accent-yellow);
+}
+
+/* Template Button for Credits */
+.btn-template {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  background: var(--accent-yellow);
+  color: var(--accent-yellow-fg);
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0 #ffffff;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+}
+
+.btn-template:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 #ffffff;
+  background: #ffffff;
+  color: #000000;
+}
+
+.textarea--credits {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.6;
+  min-height: 130px;
+}
+
 .form__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

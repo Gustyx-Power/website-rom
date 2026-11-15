@@ -9,10 +9,21 @@ const STATUSES = [
   { value: "broken", label: "BROKEN" },
 ];
 
-function Field({ label, wide, children }) {
+const TEAM_DEVS = ["GustyxPower", "Overissue", "Fufufafa", "Juni", "Pavellc"];
+
+const TELEGRAM_CREDITS_TEMPLATE = `Credits:
+• Thanks Xiaomi.eu
+• Thanks @Lokcyyy for testing
+• Thanks @fufuf4f4a for flashable
+• Thanks @Overissueee as helping staff`;
+
+function Field({ label, hint, wide, children }) {
   return (
     <label className={`field${wide ? " field--wide" : ""}`}>
-      <span className="field__label mono-label">{label}</span>
+      <div className="field__header">
+        <span className="field__label mono-label">{label}</span>
+        {hint ? <span className="field__hint mono-label">{hint}</span> : null}
+      </div>
       {children}
     </label>
   );
@@ -32,6 +43,8 @@ export default function RomForm({ mode }) {
     android_version: "",
     kernel: "",
     source: "",
+    maintainer: "",
+    credits: "",
     description: "",
     changelog: "",
     flash_guide: "",
@@ -64,6 +77,8 @@ export default function RomForm({ mode }) {
           android_version: rom.android_version || "",
           kernel: rom.kernel || "",
           source: rom.source || "",
+          maintainer: rom.maintainer || "",
+          credits: rom.credits || "",
           description: rom.description || "",
           changelog: rom.changelog || "",
           flash_guide: rom.flash_guide || "",
@@ -95,6 +110,23 @@ export default function RomForm({ mode }) {
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
+  const setMaintainer = (name) => {
+    setForm((f) => {
+      if (!f.maintainer.trim()) return { ...f, maintainer: name };
+      if (f.maintainer.includes(name)) return f;
+      return { ...f, maintainer: `${f.maintainer}, ${name}` };
+    });
+  };
+
+  const insertTemplate = () => {
+    setForm((f) => ({
+      ...f,
+      credits: f.credits.trim()
+        ? `${f.credits}\n\n${TELEGRAM_CREDITS_TEMPLATE}`
+        : TELEGRAM_CREDITS_TEMPLATE,
+    }));
+  };
+
   const updFeature = (i, key) => (e) =>
     setFeatures((list) =>
       list.map((f, idx) => (idx === i ? { ...f, [key]: e.target.value } : f))
@@ -118,6 +150,8 @@ export default function RomForm({ mode }) {
       android_version: form.android_version.trim(),
       kernel: form.kernel.trim(),
       source: form.source.trim(),
+      maintainer: form.maintainer.trim(),
+      credits: form.credits,
       description: form.description,
       changelog: form.changelog,
       flash_guide: form.flash_guide,
@@ -152,7 +186,6 @@ export default function RomForm({ mode }) {
     if (!files?.length || !romId) return;
     setError(null);
     setUploading(files.length);
-    let ok = 0;
     for (const file of Array.from(files)) {
       if (!file.type.startsWith("image/")) {
         setError(`SKIPPED ${file.name} / NOT AN IMAGE FILE`);
@@ -169,43 +202,43 @@ export default function RomForm({ mode }) {
           body: fd,
         });
         if (!res.ok) {
-          const d = await res.json().catch(() => null);
-          setError(d?.error || `UPLOAD GAGAL: ${file.name}`);
-        } else {
-          const d = await res.json();
-          setImages((list) => [
-            ...list,
-            { id: d.image.id, object_key: d.image.object_key },
-          ]);
-          ok += 1;
+          const b = await res.json().catch(() => ({}));
+          throw new Error(b.error || "Upload failed");
         }
-      } catch {
-        setError(`UPLOAD GAGAL: ${file.name}`);
+        const { image } = await res.json();
+        setImages((list) => [...list, image]);
+      } catch (e) {
+        setError(e.message);
+      } finally {
+        setUploading((n) => n - 1);
       }
-      setUploading((n) => Math.max(0, n - 1));
     }
-    if (fileRef.current) fileRef.current.value = "";
-    if (ok) setNotice(`${ok} IMAGE(S) TERUPLOAD`);
   }
 
   async function deleteImage(id) {
+    if (!window.confirm("Delete screenshot permanently?")) return;
     try {
       await apiSend("DELETE", `/api/images/${id}`);
-      setImages((list) => list.filter((i) => i.id !== id));
+      setImages((list) => list.filter((im) => im.id !== id));
     } catch (e) {
       setError(e.message);
     }
   }
 
-  if (loading) return <Loader />;
+  if (loading) return <Loader label="LOADING FORM..." />;
 
   return (
-    <form className="form" onSubmit={submit}>
+    <form className="form form--spacious" onSubmit={submit}>
       <header className="page__head">
-        <h1 className="page__title">{isEdit ? "EDIT ROM" : "NEW ROM"}</h1>
+        <div>
+          <h1 className="page__title">{isEdit ? "EDIT ROM" : "NEW ROM"}</h1>
+          <p className="mono-label page__subtitle">
+            {isEdit ? `UPDATING BUILD: ${form.title || routeSlug}` : "CREATE AND PUBLISH A NEW ROM BUILD"}
+          </p>
+        </div>
         <div className="table__actions">
           {isEdit ? (
-            <Link className="mono-label table__link" to={`/rom/${routeSlug}`}>
+            <Link className="mono-label table__link" to={`/rom/${routeSlug}`} target="_blank">
               PREVIEW ↗
             </Link>
           ) : null}
@@ -218,96 +251,196 @@ export default function RomForm({ mode }) {
       {notice ? <p className="notice">{notice}</p> : null}
       {error ? <p className="error-box mono-label">{error}</p> : null}
 
-      <div className="form__grid">
-        <Field label="TITLE *">
-          <input
-            className="input"
-            value={form.title}
-            onChange={set("title")}
-            placeholder="XTRA ULTRA PORT"
-            required
-          />
-        </Field>
-        <Field label={isEdit ? "SLUG (FIXED)" : "SLUG (OPTIONAL / AUTO FROM TITLE)"}>
-          <input
-            className="input"
-            value={form.slug}
-            onChange={set("slug")}
-            placeholder="xtra-ultra-port"
-            disabled={isEdit}
-          />
-        </Field>
-        <Field label="VERSION">
-          <input
-            className="input"
-            value={form.version}
-            onChange={set("version")}
-            placeholder="v3.2"
-          />
-        </Field>
-        <Field label="ANDROID VERSION">
-          <input
-            className="input"
-            value={form.android_version}
-            onChange={set("android_version")}
-            placeholder="16"
-          />
-        </Field>
-        <Field label="KERNEL">
-          <input
-            className="input"
-            value={form.kernel}
-            onChange={set("kernel")}
-            placeholder="Stock marble 6.1"
-          />
-        </Field>
-        <Field label="SOURCE ROM">
-          <input
-            className="input"
-            value={form.source}
-            onChange={set("source")}
-            placeholder="Xtra Ultra (Redmi Note 12 Pro 5G)"
-          />
-        </Field>
-        <Field label="DOWNLOAD URL (MIRROR)">
-          <input
-            className="input"
-            value={form.download_url}
-            onChange={set("download_url")}
-            placeholder="https://…"
-          />
-        </Field>
-        <Field label="DESCRIPTION" wide>
+      {/* SECTION 1: BASIC INFORMATION */}
+      <section className="form__card">
+        <div className="form__card-head">
+          <h2 className="form__card-title">1. BASIC IDENTIFIERS</h2>
+          <span className="mono-label form__card-subtitle">CORE METADATA & DEVELOPER ASSIGNMENT</span>
+        </div>
+
+        <div className="form__grid">
+          <Field label="ROM TITLE *" hint="REQUIRED">
+            <input
+              className="input"
+              value={form.title}
+              onChange={set("title")}
+              placeholder="e.g. HyperOS 2.0 Port / Evolution X Official"
+              required
+            />
+          </Field>
+
+          <Field label={isEdit ? "SLUG (FIXED)" : "SLUG (OPTIONAL / AUTO GENERATED)"}>
+            <input
+              className="input"
+              value={form.slug}
+              onChange={set("slug")}
+              placeholder="e.g. hyperos-2-marble"
+              disabled={isEdit}
+            />
+          </Field>
+
+          <Field label="DEVELOPER / MAINTAINER" wide hint="SELECT FROM TEAM OR TYPE MANUALLY">
+            <input
+              className="input"
+              value={form.maintainer}
+              onChange={set("maintainer")}
+              placeholder="e.g. GustyxPower, Overissue"
+            />
+            <div className="dev-picker">
+              <span className="mono-label dev-picker__label">QUICK ADD TEAM:</span>
+              <div className="dev-pills">
+                {TEAM_DEVS.map((dev) => (
+                  <button
+                    key={dev}
+                    type="button"
+                    className={`dev-pill ${form.maintainer.includes(dev) ? "is-active" : ""}`}
+                    onClick={() => setMaintainer(dev)}
+                  >
+                    + {dev}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </Field>
+
+          <Field label="DOWNLOAD URL (MIRROR LINK)" wide hint="DIRECT LINK OR EXTERNAL DRIVE">
+            <input
+              className="input"
+              value={form.download_url}
+              onChange={set("download_url")}
+              placeholder="https://drive.google.com/... or https://mega.nz/..."
+            />
+          </Field>
+        </div>
+      </section>
+
+      {/* SECTION 2: SYSTEM SPECIFICATIONS */}
+      <section className="form__card">
+        <div className="form__card-head">
+          <h2 className="form__card-title">2. SYSTEM SPECIFICATIONS</h2>
+          <span className="mono-label form__card-subtitle">HARDWARE & SOFTWARE REQUISITES</span>
+        </div>
+
+        <div className="form__grid">
+          <Field label="ROM VERSION">
+            <input
+              className="input"
+              value={form.version}
+              onChange={set("version")}
+              placeholder="e.g. v2.0.12 or Official 9.6"
+            />
+          </Field>
+
+          <Field label="ANDROID VERSION">
+            <input
+              className="input"
+              value={form.android_version}
+              onChange={set("android_version")}
+              placeholder="e.g. 14, 15, 16"
+            />
+          </Field>
+
+          <Field label="KERNEL">
+            <input
+              className="input"
+              value={form.kernel}
+              onChange={set("kernel")}
+              placeholder="e.g. Stock Marble 5.10.x / Perf Kernel"
+            />
+          </Field>
+
+          <Field label="SOURCE / BASE ROM">
+            <input
+              className="input"
+              value={form.source}
+              onChange={set("source")}
+              placeholder="e.g. Xiaomi.eu / Redmi Note 12 Turbo / Pixel Experience"
+            />
+          </Field>
+        </div>
+      </section>
+
+      {/* SECTION 3: CREDITS & ACKNOWLEDGMENTS */}
+      <section className="form__card">
+        <div className="form__card-head">
+          <div>
+            <h2 className="form__card-title">3. CREDITS & ACKNOWLEDGMENTS</h2>
+            <p className="mono-label form__card-desc">
+              CREDIT BASE AUTHORS, TESTERS, REPOSITORIES & HELPFUL CONTRIBUTORS
+            </p>
+          </div>
+          <button
+            type="button"
+            className="btn-template mono-label"
+            onClick={insertTemplate}
+            aria-label="Insert Telegram style credits template"
+          >
+            📋 INSERT TELEGRAM FORMAT
+          </button>
+        </div>
+
+        <Field label="CREDITS (ONE ITEM PER LINE OR BULLETS)" wide>
           <textarea
-            className="textarea"
-            value={form.description}
-            onChange={set("description")}
-            placeholder="Satu baris = satu paragraf."
-            rows={4}
-          />
-        </Field>
-        <Field label="CHANGELOG (SATU ITEM PER BARIS)" wide>
-          <textarea
-            className="textarea"
-            value={form.changelog}
-            onChange={set("changelog")}
-            placeholder={"Rebase ke Android 16\nFixed NFC toggle crash"}
+            className="textarea textarea--credits"
+            value={form.credits}
+            onChange={set("credits")}
+            placeholder={`Credits:\n• Thanks Xiaomi.eu\n• Thanks @Lokcyyy for testing\n• Thanks @fufuf4f4a for flashable\n• Thanks @Overissueee as helping staff`}
             rows={5}
           />
         </Field>
-        <Field label="FLASH INSTRUCTIONS (SATU STEP PER BARIS)" wide>
-          <textarea
-            className="textarea"
-            value={form.flash_guide}
-            onChange={set("flash_guide")}
-            placeholder={"Unlock bootloader\nfastboot flash recovery recovery.img\nadb sideload rom.zip"}
-            rows={6}
-          />
-        </Field>
-      </div>
+      </section>
 
-      <section className="form__section">
-        <h2 className="block__title">STATUS DOKUMENTASI FITUR</h2>
+      {/* SECTION 4: RELEASE DETAILS & GUIDES */}
+      <section className="form__card">
+        <div className="form__card-head">
+          <h2 className="form__card-title">4. DOCUMENTATION & GUIDES</h2>
+          <span className="mono-label form__card-subtitle">OVERVIEW, CHANGELOG & FLASH INSTRUCTIONS</span>
+        </div>
+
+        <div className="form__stack">
+          <Field label="DESCRIPTION / OVERVIEW" wide hint="ONE LINE = ONE PARAGRAPH">
+            <textarea
+              className="textarea"
+              value={form.description}
+              onChange={set("description")}
+              placeholder="Provide a general overview of this ROM build, feature highlights, and performance notes."
+              rows={4}
+            />
+          </Field>
+
+          <Field label="CHANGELOG (ONE ITEM PER LINE)" wide hint="LIST UPDATES AND FIXES">
+            <textarea
+              className="textarea"
+              value={form.changelog}
+              onChange={set("changelog")}
+              placeholder={"Rebased on latest Android security patch\nFixed NFC crash in Quick Settings\nOptimized battery drain and idle thermals"}
+              rows={5}
+            />
+          </Field>
+
+          <Field label="FLASH INSTRUCTIONS (ONE STEP PER LINE)" wide hint="STEP-BY-STEP SEQUENCE">
+            <textarea
+              className="textarea"
+              value={form.flash_guide}
+              onChange={set("flash_guide")}
+              placeholder={"Boot into OrangeFox or TWRP recovery\nWipe Dalvik / ART Cache and Metadata\nFlash ROM zip via adb sideload or internal storage\nFormat Data (Yes) if encrypting\nReboot System"}
+              rows={6}
+            />
+          </Field>
+        </div>
+      </section>
+
+      {/* SECTION 5: FEATURE STATUS MATRIX */}
+      <section className="form__card">
+        <div className="form__card-head">
+          <div>
+            <h2 className="form__card-title">5. FEATURE STATUS MATRIX</h2>
+            <p className="mono-label form__card-desc">
+              TRANSPARENT DIAGNOSTIC OF WHAT WORKS, PARTIALLY WORKS, OR IS BROKEN
+            </p>
+          </div>
+        </div>
+
         <div className="fe-rows">
           {features.map((f, i) => (
             <div className="fe-row" key={i}>
@@ -315,7 +448,7 @@ export default function RomForm({ mode }) {
                 className="input"
                 value={f.name}
                 onChange={updFeature(i, "name")}
-                placeholder="e.g. WiFi"
+                placeholder="Feature (e.g. Camera, 5G, Bluetooth)"
                 aria-label="Feature name"
               />
               <select
@@ -334,7 +467,7 @@ export default function RomForm({ mode }) {
                 className="input"
                 value={f.notes}
                 onChange={updFeature(i, "notes")}
-                placeholder="notes (opsional)"
+                placeholder="Notes (optional, e.g. 60fps only)"
                 aria-label="Feature notes"
               />
               <button
@@ -349,13 +482,18 @@ export default function RomForm({ mode }) {
           ))}
         </div>
         <button type="button" className="btn btn--sm btn--cyan" onClick={addFeature}>
-          + ADD FEATURE
+          + ADD HARDWARE FEATURE
         </button>
       </section>
 
+      {/* SECTION 6: SCREENSHOTS GALLERY */}
       {isEdit && romId ? (
-        <section className="form__section">
-          <h2 className="block__title">SCREENSHOTS (R2)</h2>
+        <section className="form__card">
+          <div className="form__card-head">
+            <h2 className="form__card-title">6. SCREENSHOTS GALLERY (R2)</h2>
+            <span className="mono-label form__card-subtitle">MAX 5MB PER IMAGE</span>
+          </div>
+
           <div className="img-grid">
             {images.map((im) => (
               <figure className="img-cell" key={im.id}>
@@ -378,14 +516,14 @@ export default function RomForm({ mode }) {
                 hidden
                 onChange={(e) => uploadFiles(e.target.files)}
               />
-              <span>{uploading ? `UPLOADING ${uploading}...` : "+ ADD IMAGES"}</span>
+              <span>{uploading ? `UPLOADING ${uploading}...` : "+ ADD SCREENSHOTS"}</span>
             </label>
           </div>
         </section>
       ) : null}
 
       <div className="form-actions">
-        <Link className="btn btn--sm btn--outline" to="/admin/dashboard">
+        <Link className="btn btn--outline" to="/admin/dashboard">
           CANCEL
         </Link>
         <button className="btn btn--primary" disabled={saving}>
