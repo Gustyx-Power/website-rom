@@ -1,8 +1,9 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function PocoHologram() {
-  const [rotate, setRotate] = useState({ x: 4, y: -7 });
+  const [rotate, setRotate] = useState({ x: 3, y: -6 });
   const wrapRef = useRef(null);
+  const rafRef = useRef(null);
 
   function handleMouseMove(e) {
     if (!wrapRef.current) return;
@@ -11,14 +12,25 @@ export default function PocoHologram() {
     const y = e.clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const rotX = ((y - centerY) / centerY) * -12;
-    const rotY = ((x - centerX) / centerX) * 14;
-    setRotate({ x: rotX, y: rotY });
+    const rotX = ((y - centerY) / centerY) * -10;
+    const rotY = ((x - centerX) / centerX) * 12;
+
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => {
+      setRotate({ x: rotX, y: rotY });
+    });
   }
 
   function handleMouseLeave() {
-    setRotate({ x: 4, y: -7 });
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    setRotate({ x: 3, y: -6 });
   }
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
 
   return (
     <div
@@ -36,21 +48,21 @@ export default function PocoHologram() {
       >
         <svg
           className="holo-phone-svg"
-          viewBox="50 30 240 440"
+          viewBox="40 25 260 460"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* Hard Shadow Silhouette */}
+          {/* Vector Hard Shadow (Gecko and Zen Browser Compatible, Zero Flicker) */}
           <rect
-            x="68"
-            y="48"
-            width="206"
-            height="404"
+            x="74"
+            y="54"
+            width="210"
+            height="410"
             rx="26"
             ry="26"
-            fill="none"
-            stroke="rgba(0, 0, 0, 0.95)"
-            strokeWidth="10"
+            fill="#000000"
+            stroke="rgba(0, 0, 0, 0.9)"
+            strokeWidth="2"
           />
 
           {/* Outer Phone Border (POCO F5 Clean White Silhouette) */}

@@ -114,7 +114,9 @@
   display: grid;
   place-items: center;
   transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1);
-  transform-style: preserve-3d;
+  transform-style: flat;
+  backface-visibility: visible;
+  will-change: transform;
 }
 
 .holo-phone-svg {
@@ -122,7 +124,8 @@
   height: 100%;
   max-height: 470px;
   overflow: visible;
-  filter: drop-shadow(10px 14px 0 rgba(0, 0, 0, 0.95));
+  pointer-events: none;
+  filter: none;
 }
 
 @media (max-width: 1024px) {
