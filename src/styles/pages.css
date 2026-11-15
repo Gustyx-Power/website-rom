@@ -523,6 +523,49 @@
   color: var(--accent-cyan);
 }
 
+/* ---------- credits & acknowledgments ---------- */
+
+.credits-card {
+  background: var(--surface-card);
+  border: var(--bw) solid var(--fg);
+  padding: 24px;
+  box-shadow: 5px 5px 0 var(--accent-cyan);
+}
+
+.credits-list {
+  display: grid;
+  gap: 12px;
+}
+
+.credits-item {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--fg);
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--line);
+}
+
+.credits-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.credits-bullet {
+  color: var(--accent-cyan);
+  font-size: 12px;
+  font-weight: 800;
+  flex: none;
+}
+
+.credits-text {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
 /* Detail Aside / Download Card */
 .detail__aside {
   position: sticky;

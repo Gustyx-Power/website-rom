@@ -47,7 +47,7 @@ export default function RomDetail() {
     <div className="page container">
       <nav className="crumbs">
         <Link to="/roms" className="crumbs__link mono-label">
-          ← ALL PORTS
+          ← ALL ROMS
         </Link>
       </nav>
 
@@ -57,8 +57,11 @@ export default function RomDetail() {
           <span className="detail__date">RELEASED: {formatDate(rom.created_at)}</span>
         </div>
         <h1 className="detail__title">{rom.title}</h1>
-        {(rom.version || rom.android_version || rom.source) && (
+        {(rom.version || rom.android_version || rom.source || rom.maintainer) && (
           <div className="detail__chips">
+            {rom.maintainer ? (
+              <span className="chip chip--dev">DEV: {rom.maintainer}</span>
+            ) : null}
             {rom.android_version ? (
               <span className="chip chip--cyan">ANDROID {rom.android_version}</span>
             ) : null}
@@ -121,6 +124,31 @@ export default function RomDetail() {
             </section>
           ) : null}
 
+          {rom.credits ? (
+            <section className="block">
+              <div className="block__head">
+                <div>
+                  <h2 className="block__title">CREDITS &amp; ACKNOWLEDGMENTS</h2>
+                  <p className="mono-label block__subtitle">
+                    ORIGINAL AUTHORS, TESTERS &amp; UPSTREAM CONTRIBUTORS
+                  </p>
+                </div>
+              </div>
+              <div className="credits-card">
+                <ul className="credits-list">
+                  {parseSteps(rom.credits)
+                    .filter((line) => !/^credits:?$/i.test(line.trim()))
+                    .map((item, i) => (
+                      <li key={i} className="credits-item">
+                        <span className="credits-bullet">✦</span>
+                        <span className="credits-text">{item}</span>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            </section>
+          ) : null}
+
           {steps.length ? (
             <section className="block">
               <h2 className="block__title">FLASHING INSTRUCTIONS (STEP BY STEP)</h2>
@@ -175,6 +203,12 @@ export default function RomDetail() {
             )}
 
             <dl className="info-list">
+              {rom.maintainer ? (
+                <div>
+                  <dt className="mono-label">DEVELOPER</dt>
+                  <dd>{rom.maintainer}</dd>
+                </div>
+              ) : null}
               <div>
                 <dt className="mono-label">VERSION</dt>
                 <dd>{rom.version || "N/A"}</dd>
