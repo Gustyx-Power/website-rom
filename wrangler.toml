@@ -1,0 +1,22 @@
+# XMS Port — Cloudflare Pages (config as code)
+# Reponya connect ke Cloudflare Pages → binding di bawah otomatis dipakai saat build/deploy.
+
+name = "xms-port"
+compatibility_date = "2025-09-01"
+pages_build_output_dir = "dist"
+
+# ---- D1: database ROM, fitur, metadata gambar ----
+[[d1_databases]]
+binding = "DB"
+database_name = "xms-port-db"
+database_id = "00000000-0000-0000-0000-000000000000"  # GANTI: wrangler d1 create xms-port-db
+
+# ---- R2: penyimpanan file gambar (screenshot ROM) ----
+[[r2_buckets]]
+binding = "IMAGES"
+bucket_name = "xms-port-images"                        # GANTI jika nama bucket beda
+
+# ---- Secret (TIDAK disimpan di sini) ----
+# ADMIN_TOKEN di-set sebagai Pages secret:
+#   npx wrangler pages secret put ADMIN_TOKEN --project-name xms-port
+# Untuk local dev, copy .dev.vars.example → .dev.vars

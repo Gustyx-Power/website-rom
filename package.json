@@ -1,0 +1,36 @@
+{
+  "name": "xms-port",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Xtra Manager Software Port — custom ROM distribution site for POCO F5. React + Cloudflare Pages Functions + D1 + R2.",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "vite",
+    "dev:cf": "wrangler pages dev -- npm run dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "preview:cf": "npm run build && wrangler pages dev dist",
+    "deploy": "npm run build && wrangler pages deploy dist",
+    "db:init": "wrangler d1 execute xms-port-db --local --file=schema.sql",
+    "db:seed": "wrangler d1 execute xms-port-db --local --file=seed.sql",
+    "verify:api": "node scripts/verify-functions.mjs"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11",
+    "wrangler": "^4.0.0"
+  },
+  "allowScripts": {
+    "esbuild@0.21.5": true,
+    "esbuild@0.28.2": true,
+    "workerd@1.20261113.1": true
+  }
+}

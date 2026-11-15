@@ -1,0 +1,3 @@
+# Local dev only (dipakai `npm run dev:cf` / `npm run preview:cf`).
+# Copy file ini menjadi `.dev.vars` lalu ubah isinya.
+ADMIN_TOKEN=dev-password

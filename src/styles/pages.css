@@ -1,0 +1,233 @@
+/* ============================================================
+   XMS PORT — public pages (home, roms, detail)
+   ============================================================ */
+
+/* ---------- hero ---------- */
+
+.hero { padding: 72px 0 56px; display: grid; gap: 32px; }
+.hero__kicker {
+  display: inline-block;
+  width: max-content;
+  border: var(--bw) solid var(--fg);
+  padding: 8px 14px;
+  box-shadow: var(--shadow-sm);
+}
+.hero__title {
+  display: flex;
+  flex-direction: column;
+  font-size: clamp(52px, 11vw, 128px);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+.hero__title .is-outline { -webkit-text-stroke: 2.5px var(--fg); }
+.hero__meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: var(--bw) solid var(--fg);
+}
+.hero__meta > div {
+  display: grid;
+  gap: 6px;
+  padding: 18px 18px 18px 0;
+  border-bottom: var(--bw-thin) solid var(--line);
+  align-content: start;
+}
+.hero__meta .mono-label { color: var(--muted); }
+.hero__meta strong { font-size: 15px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
+@media (max-width: 760px) { .hero__meta { grid-template-columns: 1fr; } }
+
+/* ---------- about ---------- */
+
+.about { border: var(--bw) solid var(--fg); padding: 32px; box-shadow: var(--shadow); }
+.about__cols { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; margin-top: 20px; }
+.about__cols p { color: rgba(255, 255, 255, 0.85); font-size: 17px; line-height: 1.7; max-width: 60ch; }
+.specs { display: grid; align-content: start; }
+.specs > div {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: var(--bw-thin) solid var(--line);
+  align-items: baseline;
+}
+.specs dt { color: var(--muted); }
+.specs dd {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+@media (max-width: 860px) {
+  .about { padding: 22px; }
+  .about__cols { grid-template-columns: 1fr; gap: 24px; }
+}
+
+/* ---------- page head & filters ---------- */
+
+.page__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  border-bottom: var(--bw) solid var(--fg);
+  padding-bottom: 16px;
+  margin-bottom: 28px;
+}
+.page__title {
+  font-size: clamp(36px, 7vw, 72px);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+.page__count { color: var(--muted); }
+
+.filters { display: grid; grid-template-columns: 1fr auto auto; gap: 14px; margin-bottom: 28px; }
+@media (max-width: 760px) { .filters { grid-template-columns: 1fr; } }
+
+/* ---------- rom detail ---------- */
+
+.crumbs { margin-bottom: 24px; }
+.crumbs a { border-bottom: 2px solid var(--fg); padding-bottom: 3px; }
+.crumbs a:hover { background: var(--fg); color: var(--bg); }
+
+.detail__head {
+  display: grid;
+  gap: 16px;
+  padding-bottom: 32px;
+  border-bottom: var(--bw) solid var(--fg);
+  margin-bottom: 32px;
+}
+.detail__id { color: var(--muted); }
+.detail__title {
+  font-size: clamp(40px, 8vw, 92px);
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+.detail__chips { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.detail__gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.gallery__cell {
+  display: block;
+  padding: 0;
+  border: 2px solid var(--fg);
+  background: var(--bg);
+  overflow: hidden;
+  cursor: zoom-in;
+}
+.gallery__cell img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  transition: transform 0.25s ease;
+}
+.gallery__cell:hover img { transform: scale(1.04); }
+
+.detail__grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 48px; margin-bottom: 40px; }
+.detail__main { display: grid; gap: 40px; align-content: start; }
+
+.block { display: grid; gap: 18px; }
+.block__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.block__title {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--fg);
+  padding-bottom: 8px;
+}
+.block__body { color: rgba(255, 255, 255, 0.82); font-size: 16px; line-height: 1.75; max-width: 68ch; }
+
+.changelog { display: grid; gap: 10px; }
+.changelog li {
+  position: relative;
+  padding-left: 22px;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+.changelog li::before {
+  content: "+";
+  position: absolute;
+  left: 0;
+  font-weight: 700;
+}
+
+.detail__aside {
+  display: grid;
+  gap: 20px;
+  align-content: start;
+  position: sticky;
+  top: calc(var(--nav-h) + 24px);
+}
+.info-list { border-top: var(--bw) solid var(--fg); }
+.info-list > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: var(--bw-thin) solid var(--line);
+}
+.info-list dt { color: var(--muted); flex: none; }
+.info-list dd {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  text-align: right;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  overflow-wrap: anywhere;
+}
+
+.steps { display: grid; border-top: var(--bw) solid var(--fg); }
+.steps li {
+  display: flex;
+  gap: 18px;
+  align-items: baseline;
+  padding: 16px 0;
+  border-bottom: var(--bw-thin) solid var(--line);
+}
+.steps__num {
+  flex: none;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+  border: 2px solid var(--fg);
+  padding: 3px 8px;
+}
+.steps li span:last-child { font-size: 15px; line-height: 1.65; }
+.steps__warn { color: var(--muted); }
+
+.legend { display: flex; gap: 8px; flex-wrap: wrap; }
+
+@media (max-width: 900px) {
+  .detail__grid { grid-template-columns: 1fr; gap: 32px; }
+  .detail__aside { position: static; order: -1; }
+}
+
+/* ---------- not found ---------- */
+
+.notfound { display: grid; gap: 20px; justify-items: start; padding-top: 96px; padding-bottom: 140px; }
+.notfound__title {
+  font-size: clamp(56px, 12vw, 140px);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+}
