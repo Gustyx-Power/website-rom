@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS roms (
   changelog TEXT NOT NULL DEFAULT '',
   flash_guide TEXT NOT NULL DEFAULT '',
   download_url TEXT NOT NULL DEFAULT '',
+  downloads INTEGER NOT NULL DEFAULT 0,
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );

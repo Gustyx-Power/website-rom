@@ -51,6 +51,9 @@ export async function ensureColumns(db) {
   try {
     await db.prepare("ALTER TABLE roms ADD COLUMN credits TEXT NOT NULL DEFAULT ''").run();
   } catch {}
+  try {
+    await db.prepare("ALTER TABLE roms ADD COLUMN downloads INTEGER NOT NULL DEFAULT 0").run();
+  } catch {}
 }
 
 export async function getRomBySlug(db, slug) {

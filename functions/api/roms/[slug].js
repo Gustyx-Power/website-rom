@@ -15,6 +15,39 @@ export async function onRequestGet({ env, params }) {
   return json({ rom });
 }
 
+// POST /api/roms/:slug / publik: catat klik download (1x per browser/cookie cache).
+export async function onRequestPost({ request, env, params }) {
+  await ensureColumns(env.DB);
+  const rom = await env.DB
+    .prepare("SELECT id, downloads FROM roms WHERE slug = ?")
+    .bind(params.slug)
+    .first();
+  if (!rom) return err("ROM not found", 404);
+
+  const cookieHeader = request.headers.get("Cookie") || "";
+  const cookieName = `xms_dl_${params.slug}`;
+  const hasCookie = cookieHeader.includes(`${cookieName}=1`);
+
+  let currentDownloads = Number(rom.downloads) || 0;
+
+  if (!hasCookie) {
+    currentDownloads += 1;
+    await env.DB
+      .prepare("UPDATE roms SET downloads = ? WHERE id = ?")
+      .bind(currentDownloads, rom.id)
+      .run();
+  }
+
+  const res = json({ ok: true, downloads: currentDownloads, cached: hasCookie });
+  if (!hasCookie) {
+    res.headers.set(
+      "Set-Cookie",
+      `${cookieName}=1; Max-Age=2592000; Path=/; SameSite=Lax`
+    );
+  }
+  return res;
+}
+
 // PUT /api/roms/:slug — admin: update data ROM (fitur di-replace).
 export async function onRequestPut({ request, env, params }) {
   const unauth = await requireAuth(request, env);
