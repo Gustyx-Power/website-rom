@@ -16,6 +16,9 @@ CREATE TABLE IF NOT EXISTS roms (
   changelog TEXT NOT NULL DEFAULT '',
   flash_guide TEXT NOT NULL DEFAULT '',
   download_url TEXT NOT NULL DEFAULT '',
+  donation_url TEXT NOT NULL DEFAULT '',
+  support_url TEXT NOT NULL DEFAULT '',
+  banner_object_key TEXT NOT NULL DEFAULT '',
   downloads INTEGER NOT NULL DEFAULT 0,
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
@@ -37,8 +40,10 @@ CREATE TABLE IF NOT EXISTS rom_images (
   rom_id INTEGER NOT NULL REFERENCES roms(id) ON DELETE CASCADE,
   object_key TEXT NOT NULL UNIQUE,
   content_type TEXT NOT NULL DEFAULT 'image/png',
+  is_banner INTEGER NOT NULL DEFAULT 0,
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
 CREATE INDEX IF NOT EXISTS idx_rom_features_rom ON rom_features (rom_id);
 CREATE INDEX IF NOT EXISTS idx_rom_images_rom ON rom_images (rom_id);
+CREATE INDEX IF NOT EXISTS idx_rom_images_is_banner ON rom_images (rom_id, is_banner);
