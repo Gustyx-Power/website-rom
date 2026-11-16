@@ -77,8 +77,9 @@ export async function onRequestPut({ request, env, params }) {
   await env.DB.prepare(
     `UPDATE roms SET
       title = ?, version = ?, android_version = ?, kernel = ?, source = ?,
-      maintainer = ?, credits = ?, description = ?, changelog = ?, flash_guide = ?, download_url = ?, updated_at = ?
-     WHERE id = ?`
+      maintainer = ?, credits = ?, description = ?, changelog = ?, flash_guide = ?,
+      download_url = ?, donation_url = ?, support_url = ?, banner_object_key = ?, updated_at = ?
+      WHERE id = ?`
   )
     .bind(
       title.slice(0, 120),
@@ -92,6 +93,9 @@ export async function onRequestPut({ request, env, params }) {
       String(body?.changelog || "").slice(0, 8000),
       String(body?.flash_guide || "").slice(0, 8000),
       String(body?.download_url || "").trim().slice(0, 600),
+      String(body?.donation_url || "").trim().slice(0, 600),
+      String(body?.support_url || "").trim().slice(0, 600),
+      String(body?.banner_object_key || "").trim().slice(0, 500),
       nowStamp(),
       rom.id
     )

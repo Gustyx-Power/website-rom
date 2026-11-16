@@ -7,15 +7,14 @@ import {
   nowStamp,
   FEATURE_STATUSES,
   ensureColumns,
+  getAllRoms,
 } from "../../../shared/db.js";
 
 // GET /api/roms — publik: daftar semua ROM (terbaru dulu).
 export async function onRequestGet({ env }) {
   await ensureColumns(env.DB);
-  const res = await env.DB.prepare(
-    "SELECT * FROM roms ORDER BY datetime(created_at) DESC, id DESC"
-  ).all();
-  return json({ roms: res.results });
+  const roms = await getAllRoms(env.DB);
+  return json({ roms });
 }
 
 // POST /api/roms — admin: buat ROM baru + fitur.
@@ -44,8 +43,8 @@ export async function onRequestPost({ request, env }) {
 
   await env.DB.prepare(
     `INSERT INTO roms
-      (slug, title, version, android_version, kernel, source, maintainer, credits, description, changelog, flash_guide, download_url, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      (slug, title, version, android_version, kernel, source, maintainer, credits, description, changelog, flash_guide, download_url, donation_url, support_url, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   )
     .bind(
       slug,
@@ -60,6 +59,8 @@ export async function onRequestPost({ request, env }) {
       String(body?.changelog || "").slice(0, 8000),
       String(body?.flash_guide || "").slice(0, 8000),
       String(body?.download_url || "").trim().slice(0, 600),
+      String(body?.donation_url || "").trim().slice(0, 600),
+      String(body?.support_url || "").trim().slice(0, 600),
       now,
       now
     )

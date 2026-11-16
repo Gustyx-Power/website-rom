@@ -8,6 +8,7 @@ import * as romsIndex from "../functions/api/roms/index.js";
 import * as romsSlug from "../functions/api/roms/[slug].js";
 import * as imagesIndex from "../functions/api/images/index.js";
 import * as imageId from "../functions/api/images/[id].js";
+import * as screenshotsSlug from "../functions/api/screenshots/[slug].js";
 import * as serveImage from "../functions/images/[[path]].js";
 import { err } from "../shared/response.js";
 
@@ -48,6 +49,10 @@ export default {
           if (seg.length === 3 && method === "DELETE") {
             return imageId.onRequestDelete({ request, env, params: { id: seg[2] } });
           }
+        }
+
+        if (seg[1] === "screenshots" && seg.length === 3 && method === "GET") {
+          return screenshotsSlug.onRequestGet({ env, params: { slug: decodeURIComponent(seg[2]) } });
         }
 
         return err("Method not allowed", 405);

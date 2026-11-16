@@ -49,7 +49,12 @@ export default function RomForm({ mode }) {
     changelog: "",
     flash_guide: "",
     download_url: "",
+    donation_url: "",
+    support_url: "",
   });
+  const [banner, setBanner] = useState(null); // { id, url } satu banner per ROM
+  const [uploadingBanner, setUploadingBanner] = useState(false);
+  const bannerFileRef = useRef();
   const [features, setFeatures] = useState([
     { name: "", status: "works", notes: "" },
   ]);
@@ -84,7 +89,10 @@ export default function RomForm({ mode }) {
           changelog: rom.changelog || "",
           flash_guide: rom.flash_guide || "",
           download_url: rom.download_url || "",
+          donation_url: rom.donation_url || "",
+          support_url: rom.support_url || "",
         });
+        if (rom.banner?.id) setBanner({ id: rom.banner.id, url: rom.banner.url });
         setFeatures(
           rom.features?.length
             ? rom.features.map((f) => ({
@@ -94,7 +102,7 @@ export default function RomForm({ mode }) {
               }))
             : [{ name: "", status: "works", notes: "" }]
         );
-        setImages(rom.images || []);
+        setImages(rom.screenshots || rom.images || []);
         setDownloads(Number(rom.downloads) || 0);
         setRomId(rom.id);
         setLoading(false);
@@ -158,6 +166,8 @@ export default function RomForm({ mode }) {
       changelog: form.changelog,
       flash_guide: form.flash_guide,
       download_url: form.download_url.trim(),
+      donation_url: form.donation_url.trim(),
+      support_url: form.support_url.trim(),
       features: features
         .filter((f) => f.name.trim())
         .map((f) => ({
@@ -181,6 +191,49 @@ export default function RomForm({ mode }) {
     } catch (e2) {
       setError(e2.message);
       setSaving(false);
+    }
+  }
+
+  async function uploadBanner(files) {
+    const file = files?.[0];
+    if (!file || !romId) return;
+    if (!file.type.startsWith("image/")) {
+      setError(`NOT AN IMAGE FILE: ${file.name}`);
+      return;
+    }
+    setUploadingBanner(true);
+    setError(null);
+    try {
+      const fd = new FormData();
+      fd.append("romId", String(romId));
+      fd.append("file", file);
+      fd.append("isBanner", "1");
+      const res = await fetch("/api/images", {
+        method: "POST",
+        credentials: "same-origin",
+        body: fd,
+      });
+      if (!res.ok) {
+        const b = await res.json().catch(() => ({}));
+        throw new Error(b.error || "Upload failed");
+      }
+      const { image } = await res.json();
+      setBanner({ id: image.id, url: image.url });
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setUploadingBanner(false);
+    }
+  }
+
+  async function deleteBanner() {
+    if (!banner?.id) return;
+    if (!window.confirm("Delete banner image permanently?")) return;
+    try {
+      await apiSend("DELETE", `/api/images/${banner.id}`);
+      setBanner(null);
+    } catch (e) {
+      setError(e.message);
     }
   }
 
@@ -323,8 +376,70 @@ export default function RomForm({ mode }) {
               placeholder="https://drive.google.com/... or https://mega.nz/..."
             />
           </Field>
+
+          <Field label="DONATION URL (LINK DONASI)" wide hint="MIRING / DONASI DANA, GO-PAY, DANA, TRUSTPILOT, ETC">
+            <input
+              className="input"
+              type="url"
+              value={form.donation_url}
+              onChange={set("donation_url")}
+              placeholder="https://tr.st/... atau https://linktr.ee/xms"
+            />
+          </Field>
+
+          <Field label="SUPPORT GROUP URL (DISCORD / WHATSAPP / TELEGRAM)" wide hint="GRUP KOMUNITAS SUPPORT">
+            <input
+              className="input"
+              type="url"
+              value={form.support_url}
+              onChange={set("support_url")}
+              placeholder="https://discord.gg/xms atau https://t.me/xms_community"
+            />
+          </Field>
         </div>
       </section>
+
+      {/* SECTION 1.5: BANNER UPLOAD */}
+      {isEdit && romId ? (
+        <section className="form__card">
+          <div className="form__card-head">
+            <h2 className="form__card-title">BANNER ROM (MAX 5MB)</h2>
+            <span className="mono-label form__card-subtitle">
+              {banner ? "ACTIVE / GANTI BANNER AKAN MENGGANTI YANG LAMA" : "BELUM ADA BANNER"}
+            </span>
+          </div>
+          <div className="banner-grid">
+            {banner ? (
+              <figure className="banner-cell">
+                <img src={banner.url} alt="Banner ROM" />
+                <button
+                  type="button"
+                  className="banner-delete"
+                  onClick={deleteBanner}
+                  aria-label="Delete banner"
+                >
+                  ✕
+                </button>
+              </figure>
+            ) : (
+              <div className="banner-empty">
+                <span className="mono-label">NO BANNER SET</span>
+                <p>Tambahkan gambar banner untuk menampilkan di daftar ROM.</p>
+              </div>
+            )}
+            <label className="banner-add">
+              <input
+                ref={bannerFileRef}
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={(e) => uploadBanner(e.target.files)}
+              />
+              <span>{uploadingBanner ? "UPLOADING..." : "+ ADD / GANTI BANNER"}</span>
+            </label>
+          </div>
+        </section>
+      ) : null}
 
       {/* SECTION 2: SYSTEM SPECIFICATIONS */}
       <section className="form__card">
@@ -498,12 +613,12 @@ export default function RomForm({ mode }) {
         </button>
       </section>
 
-      {/* SECTION 6: SCREENSHOTS GALLERY */}
+      {/* SECTION 7: SCREENSHOTS GALLERY */}
       {isEdit && romId ? (
         <section className="form__card">
           <div className="form__card-head">
-            <h2 className="form__card-title">6. SCREENSHOTS GALLERY (R2)</h2>
-            <span className="mono-label form__card-subtitle">MAX 5MB PER IMAGE</span>
+            <h2 className="form__card-title">7. SCREENSHOTS GALLERY (R2)</h2>
+            <span className="mono-label form__card-subtitle">MAX 5MB PER IMAGE · RASIO BEBAS (1:1, 4:3, 16:9)</span>
           </div>
 
           <div className="img-grid">

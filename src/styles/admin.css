@@ -447,6 +447,95 @@
   color: var(--fg-secondary);
 }
 
+/* ---------- banner admin editor ---------- */
+
+.banner-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.banner-cell {
+  position: relative;
+  border: 2px solid var(--fg);
+  background: var(--surface-elevated);
+  overflow: hidden;
+  box-shadow: 4px 4px 0 var(--accent-yellow);
+  max-width: 600px;
+}
+
+.banner-cell img {
+  width: 100%;
+  aspect-ratio: 16 / 5;
+  object-fit: cover;
+}
+
+.banner-delete {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  background: var(--accent-red);
+  color: #ffffff;
+  border: 2px solid #000000;
+  font-size: 14px;
+  font-weight: 800;
+  box-shadow: 2px 2px 0 #ffffff;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.banner-delete:hover {
+  transform: scale(1.1);
+  background: #ffffff;
+  color: var(--accent-red);
+}
+
+.banner-empty {
+  border: 2px dashed var(--line-strong);
+  padding: 24px;
+  display: grid;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.banner-empty span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.banner-empty p {
+  color: var(--fg-secondary);
+  font-size: 13.5px;
+}
+
+.banner-add {
+  border: 2px dashed var(--accent-yellow);
+  background: rgba(255, 230, 0, 0.04);
+  padding: 16px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-yellow);
+  max-width: 260px;
+  transition: background-color 0.15s ease, transform 0.12s ease;
+}
+
+.banner-add:hover {
+  background: var(--accent-yellow);
+  color: var(--accent-yellow-fg);
+  transform: translate(-2px, -2px);
+  box-shadow: 3px 3px 0 #ffffff;
+}
+
 /* ---------- dashboard table ---------- */
 
 .table {
